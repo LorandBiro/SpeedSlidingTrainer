@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeedSlidingTrainer.Core", "SpeedSlidingTrainer.Core\SpeedSlidingTrainer.Core.csproj", "{29694AA4-632F-4D9A-97DF-313ED7ADE6F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeedSlidingTrainer.CoreTests", "SpeedSlidingTrainer.CoreTests\SpeedSlidingTrainer.CoreTests.csproj", "{CA7B7D25-D081-416E-B3AF-E70628087444}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeedSlidingTrainer.Application", "SpeedSlidingTrainer.Application\SpeedSlidingTrainer.Application.csproj", "{3B6053B9-627E-4E0C-94B5-0A48C1377902}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeedSlidingTrainer.Desktop", "SpeedSlidingTrainer.Desktop\SpeedSlidingTrainer.Desktop.csproj", "{B32D1C88-19D1-4477-BF4E-2FAD535F6D6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{92604F45-49B3-40CE-B03A-43EB59E30198}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{29694AA4-632F-4D9A-97DF-313ED7ADE6F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29694AA4-632F-4D9A-97DF-313ED7ADE6F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29694AA4-632F-4D9A-97DF-313ED7ADE6F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29694AA4-632F-4D9A-97DF-313ED7ADE6F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA7B7D25-D081-416E-B3AF-E70628087444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA7B7D25-D081-416E-B3AF-E70628087444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA7B7D25-D081-416E-B3AF-E70628087444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA7B7D25-D081-416E-B3AF-E70628087444}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B6053B9-627E-4E0C-94B5-0A48C1377902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B6053B9-627E-4E0C-94B5-0A48C1377902}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B6053B9-627E-4E0C-94B5-0A48C1377902}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B6053B9-627E-4E0C-94B5-0A48C1377902}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B32D1C88-19D1-4477-BF4E-2FAD535F6D6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B32D1C88-19D1-4477-BF4E-2FAD535F6D6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B32D1C88-19D1-4477-BF4E-2FAD535F6D6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B32D1C88-19D1-4477-BF4E-2FAD535F6D6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92604F45-49B3-40CE-B03A-43EB59E30198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92604F45-49B3-40CE-B03A-43EB59E30198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92604F45-49B3-40CE-B03A-43EB59E30198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92604F45-49B3-40CE-B03A-43EB59E30198}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
