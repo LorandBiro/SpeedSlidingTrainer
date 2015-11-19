@@ -1,10 +1,10 @@
-﻿namespace SpeedSlidingTrainer.Core.Model.State.Validation
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using JetBrains.Annotations;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 
+namespace SpeedSlidingTrainer.Core.Model.State.Validation
+{
     public sealed class InvalidBoardException : Exception
     {
         public InvalidBoardException([NotNull] [ItemNotNull] IEnumerable<BoardValidationError> errors)

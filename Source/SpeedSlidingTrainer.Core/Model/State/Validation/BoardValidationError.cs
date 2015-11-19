@@ -1,8 +1,8 @@
-﻿namespace SpeedSlidingTrainer.Core.Model.State.Validation
-{
-    using System;
-    using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
+namespace SpeedSlidingTrainer.Core.Model.State.Validation
+{
     public sealed class BoardValidationError
     {
         public BoardValidationError(BoardValidationErrorType errorType, string message)

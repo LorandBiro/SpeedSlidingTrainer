@@ -1,9 +1,9 @@
-﻿namespace SpeedSlidingTrainer.Core.Model.State
-{
-    using System;
-    using JetBrains.Annotations;
-    using SpeedSlidingTrainer.Core.Model.State.Validation;
+﻿using System;
+using JetBrains.Annotations;
+using SpeedSlidingTrainer.Core.Model.State.Validation;
 
+namespace SpeedSlidingTrainer.Core.Model.State
+{
     public sealed class BoardState : BoardStateBase
     {
         private readonly int eye;

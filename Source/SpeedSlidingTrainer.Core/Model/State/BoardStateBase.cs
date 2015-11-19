@@ -1,11 +1,11 @@
-﻿namespace SpeedSlidingTrainer.Core.Model.State
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using JetBrains.Annotations;
-    using SpeedSlidingTrainer.Core.Model.State.Validation;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using JetBrains.Annotations;
+using SpeedSlidingTrainer.Core.Model.State.Validation;
 
+namespace SpeedSlidingTrainer.Core.Model.State
+{
     public abstract class BoardStateBase
     {
         [NotNull]

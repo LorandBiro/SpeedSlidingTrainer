@@ -1,9 +1,8 @@
-﻿namespace SpeedSlidingTrainer.Core.Model.State
-{
-    using System;
-    using JetBrains.Annotations;
-    using SpeedSlidingTrainer.Core.Model.State.Validation;
+﻿using JetBrains.Annotations;
+using SpeedSlidingTrainer.Core.Model.State.Validation;
 
+namespace SpeedSlidingTrainer.Core.Model.State
+{
     public sealed class BoardGoal : BoardStateBase
     {
         public BoardGoal(int width, int height, [NotNull] int[] values)

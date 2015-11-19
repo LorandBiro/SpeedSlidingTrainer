@@ -1,7 +1,7 @@
-﻿namespace SpeedSlidingTrainer.Core.Model.State.Validation
-{
-    using System;
+﻿using System;
 
+namespace SpeedSlidingTrainer.Core.Model.State.Validation
+{
     public sealed class BoardPosition
     {
         public BoardPosition(int x, int y)

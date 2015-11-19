@@ -1,7 +1,7 @@
-﻿namespace SpeedSlidingTrainer.Core.Model
-{
-    using System;
+﻿using System;
 
+namespace SpeedSlidingTrainer.Core.Model
+{
     public sealed class SolveStats
     {
         public SolveStats(DateTime date, TimeSpan duration, int moveCount)
