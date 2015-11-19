@@ -1,11 +1,12 @@
-﻿namespace ConsoleApplication1
-{
-    using System.Threading;
-    using SpeedSlidingTrainer.Core.Model;
-    using SpeedSlidingTrainer.Core.Model.State;
+﻿using System.Collections.Generic;
+using System.Threading;
+using SpeedSlidingTrainer.Core.Model;
+using SpeedSlidingTrainer.Core.Model.State;
 
+namespace ConsoleApplication1
+{
     public interface IBoardSolver
     {
-        Step[] GetSolution(BoardState state, BoardGoal goal, CancellationToken cancellationToken);
+        List<Step[]> GetSolution(BoardState state, BoardGoal goal, CancellationToken cancellationToken);
     }
 }

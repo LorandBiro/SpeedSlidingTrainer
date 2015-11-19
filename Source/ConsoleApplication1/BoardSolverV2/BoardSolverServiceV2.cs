@@ -9,7 +9,7 @@ namespace ConsoleApplication1.BoardSolverV2
 {
     public sealed class BoardSolverServiceV2 : IBoardSolver
     {
-        public Step[] GetSolution(BoardState state, BoardGoal goal, CancellationToken cancellationToken)
+        public List<Step[]> GetSolution(BoardState state, BoardGoal goal, CancellationToken cancellationToken)
         {
             if (state == null)
             {
@@ -33,7 +33,7 @@ namespace ConsoleApplication1.BoardSolverV2
                 NodeV2 current = openSet.Dequeue();
                 if (current.State.Satisfies(goal))
                 {
-                    return GetPathFrom(current).Reverse().ToArray();
+                    return new List<Step[]> { GetPathFrom(current).Reverse().ToArray() };
                 }
 
                 foreach (NodeV2 neighbor in current.GetNeighbors(goal))
