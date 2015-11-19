@@ -31,7 +31,7 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
             while (true)
             {
                 Node current = openSet.Dequeue();
-                if (current.State.Satisfies(goal))
+                if (current.EstimatedDistanceToGoal == 0)
                 {
                     return GetPathFrom(current).Reverse().ToArray();
                 }

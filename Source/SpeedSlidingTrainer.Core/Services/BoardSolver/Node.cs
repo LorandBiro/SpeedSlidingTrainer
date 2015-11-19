@@ -10,18 +10,20 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
     {
         private readonly int distanceFromInitialNode;
 
-        private Node([NotNull] BoardState state, int estimatedDistanceToGoal)
+        private Node([NotNull] SimplifiedBoardState state, int estimatedDistanceToGoal)
         {
             this.State = state;
+            this.EstimatedDistanceToGoal = estimatedDistanceToGoal;
             this.Cost = estimatedDistanceToGoal;
         }
 
-        private Node([NotNull] Node parentNode, Step previousStep, [NotNull] BoardState state, int distanceFromInitialNode, int estimatedDistanceToGoal)
+        private Node([NotNull] Node parentNode, Step previousStep, [NotNull] SimplifiedBoardState state, int distanceFromInitialNode, int estimatedDistanceToGoal)
         {
             this.ParentNode = parentNode;
             this.PreviousStep = previousStep;
             this.State = state;
             this.distanceFromInitialNode = distanceFromInitialNode;
+            this.EstimatedDistanceToGoal = estimatedDistanceToGoal;
             this.Cost = distanceFromInitialNode + estimatedDistanceToGoal;
         }
 
@@ -32,13 +34,16 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
         public Step? PreviousStep { get; }
 
         [NotNull]
-        public BoardState State { get; }
+        public SimplifiedBoardState State { get; }
+
+        public int EstimatedDistanceToGoal { get; }
 
         public int Cost { get; }
 
         public static Node CreateInitialNode([NotNull] BoardState state, [NotNull] BoardGoal goal)
         {
-            return new Node(state, GetManhattanDistance(state, goal));
+            SimplifiedBoardState simplifiedState = SimplifiedBoardState.Create(state, goal);
+            return new Node(simplifiedState, GetManhattanDistance(simplifiedState, goal));
         }
 
         public IEnumerable<Node> GetNeighbors([NotNull] BoardGoal goal)
@@ -101,7 +106,7 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
             }
         }
 
-        private static int GetManhattanDistance([NotNull] BoardState state, [NotNull] BoardGoal goal)
+        private static int GetManhattanDistance([NotNull] SimplifiedBoardState state, [NotNull] BoardGoal goal)
         {
             int width = state.Width;
             int height = state.Height;
@@ -132,7 +137,7 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
             return sum;
         }
 
-        private Node CreateNeighbor(Step previousStep, BoardState newState, BoardGoal goal)
+        private Node CreateNeighbor(Step previousStep, SimplifiedBoardState newState, BoardGoal goal)
         {
             return new Node(this, previousStep, newState, this.distanceFromInitialNode + 1, GetManhattanDistance(newState, goal));
         }
