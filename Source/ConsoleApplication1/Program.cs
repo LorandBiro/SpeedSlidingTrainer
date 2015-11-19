@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using SpeedSlidingTrainer.Core.Model.State;
-using SpeedSlidingTrainer.Core.Services;
+using SpeedSlidingTrainer.Core.Services.BoardGenerator;
+using SpeedSlidingTrainer.Core.Services.BoardSolver;
 
 namespace ConsoleApplication1
 {

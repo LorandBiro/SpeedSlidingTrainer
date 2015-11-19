@@ -4,7 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using SpeedSlidingTrainer.Core.Model.State;
 
-namespace SpeedSlidingTrainer.Core.Services
+namespace SpeedSlidingTrainer.Core.Services.BoardGenerator
 {
     public sealed class BoardGeneratorService : IBoardGeneratorService
     {

@@ -5,7 +5,8 @@ using SpeedSlidingTrainer.Application.Services.Game;
 using SpeedSlidingTrainer.Application.Services.Solver;
 using SpeedSlidingTrainer.Application.Services.Statistics;
 using SpeedSlidingTrainer.Core.Model;
-using SpeedSlidingTrainer.Core.Services;
+using SpeedSlidingTrainer.Core.Services.BoardGenerator;
+using SpeedSlidingTrainer.Core.Services.BoardSolver;
 using SpeedSlidingTrainer.Desktop.BoardFormatting;
 using SpeedSlidingTrainer.Desktop.Infrastructure;
 

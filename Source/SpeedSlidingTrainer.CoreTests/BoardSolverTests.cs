@@ -1,13 +1,13 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SpeedSlidingTrainer.Core.Model;
+using SpeedSlidingTrainer.Core.Model.State;
+using SpeedSlidingTrainer.Core.Services.BoardGenerator;
+using SpeedSlidingTrainer.Core.Services.BoardSolver;
 
 namespace SpeedSlidingTrainer.CoreTests
 {
-    using System;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using SpeedSlidingTrainer.Core.Model;
-    using SpeedSlidingTrainer.Core.Model.State;
-    using SpeedSlidingTrainer.Core.Services;
-
     [TestClass]
     public class BoardSolverTests
     {

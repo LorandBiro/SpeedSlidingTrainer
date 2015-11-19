@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 using SpeedSlidingTrainer.Application.Services.Game;
 using SpeedSlidingTrainer.Core.Model;
 using SpeedSlidingTrainer.Core.Model.State;
-using SpeedSlidingTrainer.Core.Services;
+using SpeedSlidingTrainer.Core.Services.BoardSolver;
 
 namespace SpeedSlidingTrainer.Application.Services.Solver
 {

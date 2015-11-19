@@ -3,7 +3,7 @@ using System.ComponentModel;
 using JetBrains.Annotations;
 using SpeedSlidingTrainer.Core.Model;
 using SpeedSlidingTrainer.Core.Model.State;
-using SpeedSlidingTrainer.Core.Services;
+using SpeedSlidingTrainer.Core.Services.BoardGenerator;
 
 namespace SpeedSlidingTrainer.Application.Services.Game
 {

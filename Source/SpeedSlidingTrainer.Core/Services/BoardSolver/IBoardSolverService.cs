@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using SpeedSlidingTrainer.Core.Model;
 using SpeedSlidingTrainer.Core.Model.State;
 
-namespace SpeedSlidingTrainer.Core.Services
+namespace SpeedSlidingTrainer.Core.Services.BoardSolver
 {
     public interface IBoardSolverService
     {

@@ -4,9 +4,8 @@ using System.Linq;
 using System.Threading;
 using SpeedSlidingTrainer.Core.Model;
 using SpeedSlidingTrainer.Core.Model.State;
-using SpeedSlidingTrainer.Core.Services.BoardSolver;
 
-namespace SpeedSlidingTrainer.Core.Services
+namespace SpeedSlidingTrainer.Core.Services.BoardSolver
 {
     public sealed class BoardSolverService : IBoardSolverService
     {
