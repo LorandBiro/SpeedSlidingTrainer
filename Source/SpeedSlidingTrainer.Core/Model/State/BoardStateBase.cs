@@ -185,6 +185,7 @@ namespace SpeedSlidingTrainer.Core.Model.State
                     }
 
                     break;
+
                 case ValidationType.BoardTemplate:
                     if (unspecifiedCount < 3)
                     {
@@ -192,6 +193,7 @@ namespace SpeedSlidingTrainer.Core.Model.State
                     }
 
                     break;
+
                 case ValidationType.BoardGoal:
                     if (unspecifiedCount == values.Length)
                     {
@@ -206,6 +208,7 @@ namespace SpeedSlidingTrainer.Core.Model.State
                     }
 
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(validationType));
             }
