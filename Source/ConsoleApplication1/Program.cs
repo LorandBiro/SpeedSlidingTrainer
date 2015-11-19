@@ -7,6 +7,7 @@ using ConsoleApplication1.BoardSolverV2;
 using ConsoleApplication1.BoardSolverV3;
 using ConsoleApplication1.BoardSolverV4;
 using ConsoleApplication1.BoardSolverV5;
+using ConsoleApplication1.BoardSolverV6;
 using SpeedSlidingTrainer.Core.Model.State;
 using SpeedSlidingTrainer.Core.Services.BoardGenerator;
 
@@ -21,35 +22,35 @@ namespace ConsoleApplication1
             Measure(
                 "Simple",
                 10,
-                new IBoardSolver[] { new BoardSolverServiceV1(), new BoardSolverServiceV2(), new BoardSolverServiceV3(), new BoardSolverServiceV4(), new BoardSolverServiceV5() },
+                new IBoardSolver[] { new BoardSolverServiceV1(), new BoardSolverServiceV2(), new BoardSolverServiceV3(), new BoardSolverServiceV4(), new BoardSolverServiceV5(), new BoardSolverServiceV6() },
                 BoardTemplate.CreateEmpty(4, 4),
                 new BoardGoal(4, 4, new[] { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
 
             Measure(
                 "Medium",
                 10,
-                new IBoardSolver[] { new BoardSolverServiceV2(), new BoardSolverServiceV3(), new BoardSolverServiceV4(), new BoardSolverServiceV5() },
+                new IBoardSolver[] { new BoardSolverServiceV2(), new BoardSolverServiceV3(), new BoardSolverServiceV4(), new BoardSolverServiceV5(), new BoardSolverServiceV6() },
                 BoardTemplate.CreateEmpty(4, 4),
                 new BoardGoal(4, 4, new[] { 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
 
             Measure(
                 "Hard",
                 10,
-                new IBoardSolver[] { new BoardSolverServiceV3(), new BoardSolverServiceV4(), new BoardSolverServiceV5() },
+                new IBoardSolver[] { new BoardSolverServiceV3(), new BoardSolverServiceV4(), new BoardSolverServiceV5(), new BoardSolverServiceV6() },
                 BoardTemplate.CreateEmpty(4, 4),
                 new BoardGoal(4, 4, new[] { 1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
 
             Measure(
                 "Harder",
                 10,
-                new IBoardSolver[] { new BoardSolverServiceV4(), new BoardSolverServiceV5() },
+                new IBoardSolver[] { new BoardSolverServiceV4(), new BoardSolverServiceV5(), new BoardSolverServiceV6() },
                 BoardTemplate.CreateEmpty(4, 4),
                 new BoardGoal(4, 4, new[] { 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
 
             Measure(
                 "Extreme",
                 10,
-                new IBoardSolver[] { new BoardSolverServiceV4(), new BoardSolverServiceV5() },
+                new IBoardSolver[] { new BoardSolverServiceV4(), new BoardSolverServiceV5(), new BoardSolverServiceV6() },
                 new BoardTemplate(4, 4, new[] { 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 4 }),
                 new BoardGoal(4, 4, new[] { 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
         }

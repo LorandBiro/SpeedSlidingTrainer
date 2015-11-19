@@ -57,6 +57,7 @@
     <Compile Include="BoardSolverV3\BoardSolverServiceV3.cs" />
     <Compile Include="BoardSolverV3\NodeV3.cs" />
     <Compile Include="BoardSolverV3\PriorityQueueV3.cs" />
+    <Compile Include="BoardSolverV6\BoardSolverServiceV6.cs" />
     <Compile Include="BoardSolverV5\BoardSolverServiceV5.cs" />
     <Compile Include="BoardSolverV5\BoardStateV5.cs" />
     <Compile Include="BoardSolverV5\NodeV5.cs" />
