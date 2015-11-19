@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -23,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\SpeedSlidingTrainer.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,6 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\SpeedSlidingTrainer.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,11 +48,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoardSolverV1\BoardSolverServiceV1.cs" />
+    <Compile Include="BoardSolverV1\NodeV1.cs" />
+    <Compile Include="BoardSolverV1\PriorityQueueV1.cs" />
+    <Compile Include="BoardSolverV2\BoardSolverServiceV2.cs" />
+    <Compile Include="BoardSolverV2\NodeV2.cs" />
+    <Compile Include="BoardSolverV2\PriorityQueueV2.cs" />
+    <Compile Include="BoardSolverV3\BoardSolverServiceV3.cs" />
+    <Compile Include="BoardSolverV3\NodeV3.cs" />
+    <Compile Include="BoardSolverV3\PriorityQueueV3.cs" />
+    <Compile Include="BoardSolverV5\BoardSolverServiceV5.cs" />
+    <Compile Include="BoardSolverV5\BoardStateV5.cs" />
+    <Compile Include="BoardSolverV5\NodeV5.cs" />
+    <Compile Include="BoardSolverV4\BoardSolverServiceV4.cs" />
+    <Compile Include="BoardSolverV4\BoardStateV4.cs" />
+    <Compile Include="BoardSolverV4\NodeV4.cs" />
+    <Compile Include="BoardSolverV4\PriorityQueueV4.cs" />
+    <Compile Include="BoardSolverV5\PriorityQueueV5.cs" />
+    <Compile Include="IBoardSolver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpeedSlidingTrainer.Core\SpeedSlidingTrainer.Core.csproj">
@@ -56,7 +79,19 @@
       <Name>SpeedSlidingTrainer.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta015\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta015\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta015\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\StyleCop.Analyzers.1.0.0-beta015\build\StyleCop.Analyzers.targets" Condition="Exists('..\packages\StyleCop.Analyzers.1.0.0-beta015\build\StyleCop.Analyzers.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\StyleCop.Analyzers.1.0.0-beta015\build\StyleCop.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Analyzers.1.0.0-beta015\build\StyleCop.Analyzers.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

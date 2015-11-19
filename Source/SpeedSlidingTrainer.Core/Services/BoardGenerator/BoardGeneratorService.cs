@@ -10,7 +10,12 @@ namespace SpeedSlidingTrainer.Core.Services.BoardGenerator
     {
         private const int RetryCount = 100;
 
-        private readonly Random random = new Random();
+        private readonly Random random;
+
+        public BoardGeneratorService(int? seed = null)
+        {
+            this.random = seed == null ? new Random() : new Random(seed.Value);
+        }
 
         public BoardState Generate(BoardTemplate template)
         {
