@@ -8,13 +8,15 @@ namespace SpeedSlidingTrainer.Core.Services.BoardGenerator
 {
     public sealed class BoardGeneratorService : IBoardGeneratorService
     {
+        private const int RetryCount = 100;
+
         private readonly Random random = new Random();
 
         public BoardState Generate(BoardTemplate template)
         {
             if (template == null)
             {
-                throw new ArgumentNullException("template");
+                throw new ArgumentNullException(nameof(template));
             }
 
             int[] values = template.GetValues();
@@ -47,6 +49,31 @@ namespace SpeedSlidingTrainer.Core.Services.BoardGenerator
             }
 
             return new BoardState(template.Width, template.Height, values);
+        }
+
+        public BoardState Generate(BoardTemplate template, BoardGoal goal)
+        {
+            if (template == null)
+            {
+                throw new ArgumentNullException(nameof(template));
+            }
+
+            if (goal == null)
+            {
+                throw new ArgumentNullException(nameof(goal));
+            }
+
+            BoardState state;
+            for (int i = 0; i < RetryCount; i++)
+            {
+                state = this.Generate(template);
+                if (!state.Satisfies(goal))
+                {
+                    return state;
+                }
+            }
+
+            throw new BoardGenerationException("Failed to generate a board that doesn't satisfy the specified goal.");
         }
 
         [NotNull]

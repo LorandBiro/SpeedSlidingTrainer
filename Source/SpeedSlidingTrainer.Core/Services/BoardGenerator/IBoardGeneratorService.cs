@@ -7,5 +7,8 @@ namespace SpeedSlidingTrainer.Core.Services.BoardGenerator
     {
         [NotNull]
         BoardState Generate([NotNull] BoardTemplate template);
+
+        [NotNull]
+        BoardState Generate([NotNull] BoardTemplate template, [NotNull] BoardGoal goal);
     }
 }
