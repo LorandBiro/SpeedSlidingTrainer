@@ -74,6 +74,7 @@
     <Compile Include="DrillEditor.xaml.cs">
       <DependentUpon>DrillEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\FileDataStorage.cs" />
     <Compile Include="Infrastructure\InMemoryDataStorage.cs" />
     <Compile Include="Infrastructure\TimerAdapter.cs" />
     <Compile Include="Infrastructure\TimerAdapterFactory.cs" />

@@ -22,7 +22,7 @@ namespace SpeedSlidingTrainer.Desktop
         // Application compontents
         public static ITimerFactory TimerFactory { get; } = new TimerAdapterFactory();
 
-        public static IDataStorage DataStorage { get; } = new InMemoryDataStorage();
+        public static IDataStorage DataStorage { get; } = new FileDataStorage();
 
         public static IRepository<Drill> DrillRepository { get; } = new DrillRepository(DataStorage);
 
