@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\IDataStorage.cs" />
+    <Compile Include="Infrastructure\IDispatcher.cs" />
     <Compile Include="Infrastructure\ITimer.cs" />
     <Compile Include="Infrastructure\ITimerFactory.cs" />
     <Compile Include="Repositories\DrillRepository.cs" />

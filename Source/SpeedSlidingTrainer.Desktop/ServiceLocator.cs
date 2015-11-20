@@ -24,6 +24,8 @@ namespace SpeedSlidingTrainer.Desktop
 
         public static IDataStorage DataStorage { get; } = new FileDataStorage();
 
+        public static IDispatcher Dispatcher { get; } = new WpfDispatcher();
+
         public static IRepository<Drill> DrillRepository { get; } = new DrillRepository(DataStorage);
 
         // Application services
@@ -33,7 +35,7 @@ namespace SpeedSlidingTrainer.Desktop
 
         public static IDrillService DrillService { get; } = new DrillService(DrillRepository);
 
-        public static ISolverService SolverService { get; } = new SolverService(GameService, BoardSolverService);
+        public static ISolverService SolverService { get; } = new SolverService(GameService, BoardSolverService, Dispatcher);
 
         // Presentation compontents
         public static IBoardFormatter BoardFormatter { get; } = new BoardFormatter();

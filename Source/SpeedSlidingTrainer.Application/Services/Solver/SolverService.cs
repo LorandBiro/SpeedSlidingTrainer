@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using SpeedSlidingTrainer.Application.Infrastructure;
 using SpeedSlidingTrainer.Application.Services.Game;
 using SpeedSlidingTrainer.Core.Model;
 using SpeedSlidingTrainer.Core.Model.State;
@@ -21,12 +22,15 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
         private readonly IBoardSolverService boardSolverService;
 
         [NotNull]
+        private readonly IDispatcher dispatcher;
+
+        [NotNull]
         private readonly object locker = new object();
 
         private SolverServiceStatus status;
 
         [CanBeNull]
-        private CancellationTokenSource cts;
+        private BackgroundJob currentBackgroundJob;
 
         private ObservableCollection<SolutionStep> solution = new ObservableCollection<SolutionStep>();
 
@@ -34,7 +38,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 
         private int nextStepIndex;
 
-        public SolverService(IGameService gameService, IBoardSolverService boardSolverService)
+        public SolverService(IGameService gameService, IBoardSolverService boardSolverService, IDispatcher dispatcher)
         {
             if (gameService == null)
             {
@@ -46,11 +50,17 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
                 throw new ArgumentNullException(nameof(boardSolverService));
             }
 
+            if (dispatcher == null)
+            {
+                throw new ArgumentNullException(nameof(dispatcher));
+            }
+
             this.gameService = gameService;
             this.gameService.Scrambled += this.GameServiceOnScrambled;
             this.gameService.Slid += this.GameServiceOnSlid;
             this.gameService.Resetted += this.GameServiceOnResetted;
             this.boardSolverService = boardSolverService;
+            this.dispatcher = dispatcher;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -104,114 +114,109 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 
         public void StartSolveCurrentBoard()
         {
-            CancellationToken currentCancellationToken;
-            BoardState initialState;
-            BoardGoal boardGoal;
-
-            lock (this.locker)
+            if (this.Status != SolverServiceStatus.NotSolved)
             {
-                if (this.Status != SolverServiceStatus.NotSolved)
-                {
-                    return;
-                }
-
-                this.Status = SolverServiceStatus.Solving;
-                this.Solution = null;
-                this.cts = new CancellationTokenSource();
-
-                currentCancellationToken = this.cts.Token;
-                initialState = this.gameService.StartState;
-                boardGoal = this.gameService.Drill.Goal;
+                return;
             }
 
-            Task.Factory.StartNew(
-                () =>
-                    {
-                        try
-                        {
-                            Step[] result = this.boardSolverService.GetSolution(initialState, boardGoal, currentCancellationToken)[0];
+            this.Status = SolverServiceStatus.Solving;
+            this.Solution = null;
+            this.currentBackgroundJob = new BackgroundJob
+            {
+                State = this.gameService.StartState,
+                Goal = this.gameService.Drill.Goal,
+                CancellationTokenSource = new CancellationTokenSource()
+            };
 
-                            lock (this.locker)
-                            {
-                                if (currentCancellationToken.IsCancellationRequested)
-                                {
-                                    return;
-                                }
-
-                                this.Status = SolverServiceStatus.Solved;
-                                this.Solution = new ObservableCollection<SolutionStep>(
-                                    result.Select(x => new SolutionStep(x, SolutionStepStatus.NotSteppedYet)));
-                                this.SolutionLength = result.Length;
-                                this.nextStepIndex = 0;
-                            }
-                        }
-                        catch (OperationCanceledException)
-                        {
-                        }
-                    },
-                currentCancellationToken);
+            Task.Factory.StartNew(() => this.BackgroundThreadMain(this.currentBackgroundJob), this.currentBackgroundJob.CancellationTokenSource.Token);
         }
 
         private void GameServiceOnSlid(object sender, SlidEventArgs slidEventArgs)
         {
-            lock (this.locker)
+            if (this.Status != SolverServiceStatus.Solved)
             {
-                if (this.Status != SolverServiceStatus.Solved)
+                return;
+            }
+
+            if (this.nextStepIndex >= this.SolutionLength)
+            {
+                return;
+            }
+
+            if (this.Solution[this.nextStepIndex].Step == slidEventArgs.Step)
+            {
+                this.Solution[this.nextStepIndex].Status = SolutionStepStatus.Stepped;
+                this.nextStepIndex++;
+            }
+            else
+            {
+                for (int i = this.nextStepIndex; i < this.Solution.Count; i++)
                 {
-                    return;
+                    this.Solution[i].Status = SolutionStepStatus.Misstepped;
                 }
 
-                if (this.nextStepIndex >= this.SolutionLength)
-                {
-                    return;
-                }
-
-                if (this.Solution[this.nextStepIndex].Step == slidEventArgs.Step)
-                {
-                    this.Solution[this.nextStepIndex].Status = SolutionStepStatus.Stepped;
-                    this.nextStepIndex++;
-                }
-                else
-                {
-                    for (int i = this.nextStepIndex; i < this.Solution.Count; i++)
-                    {
-                        this.Solution[i].Status = SolutionStepStatus.Misstepped;
-                    }
-
-                    this.nextStepIndex = this.SolutionLength;
-                }
+                this.nextStepIndex = this.SolutionLength;
             }
         }
 
         private void GameServiceOnResetted(object sender, EventArgs eventArgs)
         {
-            lock (this.locker)
+            if (this.Solution == null)
             {
-                if (this.Solution == null)
-                {
-                    return;
-                }
+                return;
+            }
 
-                this.nextStepIndex = 0;
-                foreach (SolutionStep solutionStep in this.Solution)
-                {
-                    solutionStep.Status = SolutionStepStatus.NotSteppedYet;
-                }
+            this.nextStepIndex = 0;
+            foreach (SolutionStep solutionStep in this.Solution)
+            {
+                solutionStep.Status = SolutionStepStatus.NotSteppedYet;
             }
         }
 
         private void GameServiceOnScrambled(object sender, EventArgs eventArgs)
         {
-            lock (this.locker)
+            if (this.Status == SolverServiceStatus.Solving)
             {
-                if (this.Status == SolverServiceStatus.Solving)
-                {
-                    this.cts?.Cancel();
-                }
-
-                this.Status = SolverServiceStatus.NotSolved;
-                this.Solution = null;
+                this.currentBackgroundJob.CancellationTokenSource.Cancel();
             }
+
+            this.Status = SolverServiceStatus.NotSolved;
+            this.Solution = null;
+        }
+
+        private void BackgroundThreadMain(BackgroundJob job)
+        {
+            try
+            {
+                Step[][] solutions = this.boardSolverService.GetSolution(job.State, job.Goal, job.CancellationTokenSource.Token);
+                this.dispatcher.BeginInvoke(() => this.OnSolved(job, solutions));
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        private void OnSolved(BackgroundJob job, Step[][] solutions)
+        {
+            if (job.CancellationTokenSource.IsCancellationRequested)
+            {
+                return;
+            }
+
+            Step[] result = solutions[0];
+            this.Status = SolverServiceStatus.Solved;
+            this.Solution = new ObservableCollection<SolutionStep>(result.Select(x => new SolutionStep(x, SolutionStepStatus.NotSteppedYet)));
+            this.SolutionLength = result.Length;
+            this.nextStepIndex = 0;
+        }
+
+        private class BackgroundJob
+        {
+            public BoardState State { get; set; }
+
+            public BoardGoal Goal { get; set; }
+
+            public CancellationTokenSource CancellationTokenSource { get; set; }
         }
     }
 }
