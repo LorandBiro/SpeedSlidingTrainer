@@ -136,6 +136,15 @@
             </ItemsControl>
         </StackPanel>
 
+        <CheckBox IsChecked="{Binding SolverService.AutoSolve}"
+                  Content="Auto Solve"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Bottom"
+                  Margin="0,0,8,0"
+                  Grid.Column="2"
+                  Grid.Row="1"
+                  Focusable="False" />
+
         <Grid Grid.Row="2"
               Grid.Column="0"
               Grid.ColumnSpan="3"

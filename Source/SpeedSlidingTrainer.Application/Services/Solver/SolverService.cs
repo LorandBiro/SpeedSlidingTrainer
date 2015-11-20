@@ -65,6 +65,8 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public bool AutoSolve { get; set; }
+
         public SolverServiceStatus Status
         {
             get
@@ -182,6 +184,10 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 
             this.Status = SolverServiceStatus.NotSolved;
             this.Solution = null;
+            if (this.AutoSolve)
+            {
+                this.StartSolveCurrentBoard();
+            }
         }
 
         private void BackgroundThreadMain(BackgroundJob job)
