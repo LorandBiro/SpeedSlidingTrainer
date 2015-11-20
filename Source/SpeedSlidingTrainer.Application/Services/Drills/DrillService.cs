@@ -45,7 +45,43 @@ namespace SpeedSlidingTrainer.Application.Services.Drills
                         Drill.CreateNew(
                             "3x3 5,6,8",
                             new BoardTemplate(3, 3, new[] { 1, 2, 3, 4, 0, 0, 7, 0, 0 }),
-                            new BoardGoal(3, 3, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 0 }))
+                            new BoardGoal(3, 3, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 0 })),
+                        Drill.CreateNew(
+                            "4x4 1",
+                            new BoardTemplate(4, 4, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+                            new BoardGoal(4, 4, new[] { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 })),
+                        Drill.CreateNew(
+                            "4x4 2",
+                            new BoardTemplate(4, 4, new[] { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+                            new BoardGoal(4, 4, new[] { 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 })),
+                        Drill.CreateNew(
+                            "4x4 3,4",
+                            new BoardTemplate(4, 4, new[] { 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+                            new BoardGoal(4, 4, new[] { 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 })),
+                        Drill.CreateNew(
+                            "4x4 5",
+                            new BoardTemplate(4, 4, new[] { 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+                            new BoardGoal(4, 4, new[] { 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 })),
+                        Drill.CreateNew(
+                            "4x4 6",
+                            new BoardTemplate(4, 4, new[] { 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+                            new BoardGoal(4, 4, new[] { 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 })),
+                        Drill.CreateNew(
+                            "4x4 7,8",
+                            new BoardTemplate(4, 4, new[] { 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+                            new BoardGoal(4, 4, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0 })),
+                        Drill.CreateNew(
+                            "4x4 9,13",
+                            new BoardTemplate(4, 4, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0 }),
+                            new BoardGoal(4, 4, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 13, 0, 0, 0 })),
+                        Drill.CreateNew(
+                            "4x4 10,14",
+                            new BoardTemplate(4, 4, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 13, 0, 0, 0 }),
+                            new BoardGoal(4, 4, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 13, 14, 0, 0 })),
+                        Drill.CreateNew(
+                            "4x4 11,12,15",
+                            new BoardTemplate(4, 4, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 13, 14, 0, 0 }),
+                            new BoardGoal(4, 4, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0 }))
                     };
 
                 await this.repository.AddRangeAsync(drills);
