@@ -28,30 +28,10 @@ namespace ConsoleApplication1.BoardSolverV6
             }
 
             List<Step[]> solutions = new List<Step[]>();
+            int targetCost = int.MaxValue;
 
             PriorityQueueV5 openSet = new PriorityQueueV5();
             openSet.Enqueue(NodeV5.CreateInitialNode(state, goal));
-            while (true)
-            {
-                NodeV5 current = openSet.Dequeue();
-                if (current.EstimatedDistanceToGoal == 0)
-                {
-                    solutions.Add(GetPathFrom(current).Reverse().ToArray());
-                    break;
-                }
-
-                foreach (NodeV5 neighbor in current.GetNeighbors(goal))
-                {
-                    if (!openSet.Contains(neighbor))
-                    {
-                        openSet.Enqueue(neighbor);
-                    }
-                }
-
-                cancellationToken.ThrowIfCancellationRequested();
-            }
-
-            int targetCost = solutions[0].Length;
             while (true)
             {
                 NodeV5 current = openSet.Dequeue();
@@ -62,7 +42,13 @@ namespace ConsoleApplication1.BoardSolverV6
 
                 if (current.EstimatedDistanceToGoal == 0)
                 {
-                    solutions.Add(GetPathFrom(current).Reverse().ToArray());
+                    Step[] solution = GetPathFrom(current).Reverse().ToArray();
+                    solutions.Add(solution);
+                    if (solution.Length < targetCost)
+                    {
+                        targetCost = solution.Length;
+                    }
+
                     continue;
                 }
 
