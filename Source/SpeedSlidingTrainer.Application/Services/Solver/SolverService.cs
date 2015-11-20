@@ -129,7 +129,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
                     {
                         try
                         {
-                            Step[] result = this.boardSolverService.GetSolution(initialState, boardGoal, currentCancellationToken);
+                            Step[] result = this.boardSolverService.GetSolution(initialState, boardGoal, currentCancellationToken)[0];
 
                             lock (this.locker)
                             {

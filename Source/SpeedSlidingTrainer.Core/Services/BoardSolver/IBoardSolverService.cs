@@ -8,6 +8,6 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
     public interface IBoardSolverService
     {
         [NotNull]
-        Step[] GetSolution([NotNull] BoardState initialState, [NotNull] BoardGoal goal, CancellationToken cancellationToken);
+        Step[][] GetSolution([NotNull] BoardState initialState, [NotNull] BoardGoal goal, CancellationToken cancellationToken);
     }
 }

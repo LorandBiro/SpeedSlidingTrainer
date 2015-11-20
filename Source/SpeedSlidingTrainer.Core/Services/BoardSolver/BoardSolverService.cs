@@ -9,7 +9,7 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
 {
     public sealed class BoardSolverService : IBoardSolverService
     {
-        public Step[] GetSolution(BoardState state, BoardGoal goal, CancellationToken cancellationToken)
+        public Step[][] GetSolution(BoardState state, BoardGoal goal, CancellationToken cancellationToken)
         {
             if (state == null)
             {
@@ -26,14 +26,29 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
                 throw new ArgumentException($"The state ({state.Width}x{state.Height}) and the goal ({goal.Width}x{goal.Height}) has different sizes.");
             }
 
+            List<Step[]> solutions = new List<Step[]>();
+            int targetCost = int.MaxValue;
+
             PriorityQueue openSet = new PriorityQueue();
             openSet.Enqueue(Node.CreateInitialNode(state, goal));
             while (true)
             {
                 Node current = openSet.Dequeue();
+                if (current.Cost > targetCost)
+                {
+                    break;
+                }
+
                 if (current.EstimatedDistanceToGoal == 0)
                 {
-                    return GetPathFrom(current).Reverse().ToArray();
+                    Step[] solution = GetPathFrom(current).Reverse().ToArray();
+                    solutions.Add(solution);
+                    if (solution.Length < targetCost)
+                    {
+                        targetCost = solution.Length;
+                    }
+
+                    continue;
                 }
 
                 foreach (Node neighbor in current.GetNeighbors(goal))
@@ -46,6 +61,8 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
 
                 cancellationToken.ThrowIfCancellationRequested();
             }
+
+            return solutions.ToArray();
         }
 
         private static IEnumerable<Step> GetPathFrom(Node goalNode)

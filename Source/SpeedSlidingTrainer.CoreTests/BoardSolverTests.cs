@@ -20,7 +20,7 @@ namespace SpeedSlidingTrainer.CoreTests
             IBoardSolverService solver = new BoardSolverService();
 
             // Act
-            Step[] steps = solver.GetSolution(state, goal, CancellationToken.None);
+            Step[] steps = solver.GetSolution(state, goal, CancellationToken.None)[0];
 
             // Assert
             CollectionAssert.AreEqual(new[] { Step.Up, Step.Up }, steps);
@@ -38,7 +38,7 @@ namespace SpeedSlidingTrainer.CoreTests
             for (int i = 0; i < 100; i++)
             {
                 BoardState state = generator.Generate(template);
-                Step[] solution = solver.GetSolution(state, goal, CancellationToken.None);
+                Step[] solution = solver.GetSolution(state, goal, CancellationToken.None)[0];
                 foreach (Step step in solution)
                 {
                     switch (step)
