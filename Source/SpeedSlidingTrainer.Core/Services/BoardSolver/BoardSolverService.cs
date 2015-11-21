@@ -48,6 +48,11 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
                         targetCost = solution.Length;
                     }
 
+                    if (openSet.Count == 0)
+                    {
+                        break;
+                    }
+
                     continue;
                 }
 

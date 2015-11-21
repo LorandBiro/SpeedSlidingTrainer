@@ -11,6 +11,11 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
 
         private readonly HashSet<Node> hashSet = new HashSet<Node>();
 
+        public int Count
+        {
+            get { return this.binaryHeap.Count; }
+        }
+
         public bool Contains([NotNull] Node node)
         {
             if (node == null)
