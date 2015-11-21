@@ -9,7 +9,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
         SolverServiceStatus Status { get; }
 
         [CanBeNull]
-        IReadOnlyCollection<IReadOnlyList<SolutionStep>> Solutions { get; }
+        IReadOnlyList<IReadOnlyList<SolutionStep>> Solutions { get; }
 
         int SolutionLength { get; }
 

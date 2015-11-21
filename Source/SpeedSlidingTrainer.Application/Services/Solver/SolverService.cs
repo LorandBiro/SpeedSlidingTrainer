@@ -29,7 +29,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
         [CanBeNull]
         private BackgroundJob currentBackgroundJob;
 
-        private IReadOnlyCollection<IReadOnlyList<SolutionStep>> solutions;
+        private IReadOnlyList<IReadOnlyList<SolutionStep>> solutions;
 
         private int solutionLength;
 
@@ -83,7 +83,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             }
         }
 
-        public IReadOnlyCollection<IReadOnlyList<SolutionStep>> Solutions
+        public IReadOnlyList<IReadOnlyList<SolutionStep>> Solutions
         {
             get
             {
@@ -217,7 +217,10 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             }
 
             this.Status = SolverServiceStatus.Solved;
-            this.Solutions = solutions.Select(solution => solution.Select(x => new SolutionStep(x, SolutionStepStatus.NotSteppedYet)).ToList()).ToList();
+            this.Solutions = solutions
+                .OrderBy(solution => string.Join(",", solution))
+                .Select(solution => solution.Select(step => new SolutionStep(step, SolutionStepStatus.NotSteppedYet)).ToList())
+                .ToList();
             this.SolutionLength = solutions[0].Length;
             this.nextStepIndex = 0;
         }
