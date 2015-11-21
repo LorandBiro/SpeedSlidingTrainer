@@ -114,7 +114,7 @@
 
         <StackPanel Grid.Row="1"
                     Grid.Column="2"
-                    Width="150"
+                    MinWidth="150"
                     VerticalAlignment="Center"
                     Visibility="{Binding SolverService.Status, Converter={StaticResource SolverServiceStatusSolvedToVisibility}}">
             <TextBlock Text="Solution"
@@ -123,14 +123,28 @@
             <TextBlock Text="{Binding SolverService.SolutionLength, StringFormat=Step count: {0}}"
                        HorizontalAlignment="Center"
                        Margin="0,0,0,8"></TextBlock>
-            <ItemsControl ItemsSource="{Binding SolverService.Solution}"
-                          Focusable="False">
+            <ItemsControl ItemsSource="{Binding SolverService.Solutions}"
+                          Focusable="False"
+                          HorizontalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="solver:SolutionStep">
-                        <TextBlock HorizontalAlignment="Center"
-                                   FontWeight="Bold"
-                                   Text="{Binding Step}"
-                                   Foreground="{Binding Status, Converter={StaticResource SolutionStepStatusToBrushConverter}}" />
+                    <DataTemplate>
+                        <ItemsControl ItemsSource="{Binding}"
+                                      Focusable="False"
+                                      Margin="4,0,4,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="solver:SolutionStep">
+                                    <TextBlock HorizontalAlignment="Center"
+                                               FontWeight="Bold"
+                                               Text="{Binding Step}"
+                                               Foreground="{Binding Status, Converter={StaticResource SolutionStepStatusToBrushConverter}}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

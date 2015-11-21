@@ -29,7 +29,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
         [CanBeNull]
         private BackgroundJob currentBackgroundJob;
 
-        private IReadOnlyList<SolutionStep> solution;
+        private IReadOnlyCollection<IReadOnlyList<SolutionStep>> solutions;
 
         private int solutionLength;
 
@@ -83,17 +83,17 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             }
         }
 
-        public IReadOnlyList<SolutionStep> Solution
+        public IReadOnlyCollection<IReadOnlyList<SolutionStep>> Solutions
         {
             get
             {
-                return this.solution;
+                return this.solutions;
             }
 
             private set
             {
-                this.solution = value;
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Solution)));
+                this.solutions = value;
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Solutions)));
             }
         }
 
@@ -119,7 +119,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             }
 
             this.Status = SolverServiceStatus.Solving;
-            this.Solution = null;
+            this.Solutions = null;
             this.currentBackgroundJob = new BackgroundJob
             {
                 State = this.gameService.StartState,
@@ -142,33 +142,43 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
                 return;
             }
 
-            if (this.Solution[this.nextStepIndex].Step == slidEventArgs.Step)
+            foreach (IReadOnlyList<SolutionStep> solution in this.Solutions)
             {
-                this.Solution[this.nextStepIndex].Status = SolutionStepStatus.Stepped;
-                this.nextStepIndex++;
-            }
-            else
-            {
-                for (int i = this.nextStepIndex; i < this.Solution.Count; i++)
+                if (solution[this.nextStepIndex].Status == SolutionStepStatus.Misstepped)
                 {
-                    this.Solution[i].Status = SolutionStepStatus.Misstepped;
+                    continue;
                 }
 
-                this.nextStepIndex = this.SolutionLength;
+                if (solution[this.nextStepIndex].Step == slidEventArgs.Step)
+                {
+                    solution[this.nextStepIndex].Status = SolutionStepStatus.Stepped;
+                }
+                else
+                {
+                    for (int i = this.nextStepIndex; i < solution.Count; i++)
+                    {
+                        solution[i].Status = SolutionStepStatus.Misstepped;
+                    }
+                }
             }
+
+            this.nextStepIndex++;
         }
 
         private void GameServiceOnResetted(object sender, EventArgs eventArgs)
         {
-            if (this.Solution == null)
+            if (this.Solutions == null)
             {
                 return;
             }
 
             this.nextStepIndex = 0;
-            foreach (SolutionStep solutionStep in this.Solution)
+            foreach (IReadOnlyList<SolutionStep> solution in this.Solutions)
             {
-                solutionStep.Status = SolutionStepStatus.NotSteppedYet;
+                foreach (SolutionStep solutionStep in solution)
+                {
+                    solutionStep.Status = SolutionStepStatus.NotSteppedYet;
+                }
             }
         }
 
@@ -180,7 +190,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             }
 
             this.Status = SolverServiceStatus.NotSolved;
-            this.Solution = null;
+            this.Solutions = null;
             if (this.AutoSolve)
             {
                 this.StartSolveCurrentBoard();
@@ -206,10 +216,9 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
                 return;
             }
 
-            Step[] result = solutions[0];
             this.Status = SolverServiceStatus.Solved;
-            this.Solution = result.Select(x => new SolutionStep(x, SolutionStepStatus.NotSteppedYet)).ToList();
-            this.SolutionLength = result.Length;
+            this.Solutions = solutions.Select(solution => solution.Select(x => new SolutionStep(x, SolutionStepStatus.NotSteppedYet)).ToList()).ToList();
+            this.SolutionLength = solutions[0].Length;
             this.nextStepIndex = 0;
         }
 
