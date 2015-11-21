@@ -84,7 +84,8 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
                 }
             }
 
-            return true;
+            // This makes possible that the closed set can contain duplications that can lead to alternative optimal solutions.
+            return this.Cost < other.Cost;
         }
 
         public override bool Equals(object obj)

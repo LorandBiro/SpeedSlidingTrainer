@@ -31,9 +31,11 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
 
             PriorityQueue openSet = new PriorityQueue();
             openSet.Enqueue(Node.CreateInitialNode(state, goal));
+            HashSet<Node> closedSet = new HashSet<Node>();
             while (true)
             {
                 Node current = openSet.Dequeue();
+                closedSet.Add(current);
                 if (current.Cost > targetCost)
                 {
                     break;
@@ -58,7 +60,7 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
 
                 foreach (Node neighbor in current.GetNeighbors(goal))
                 {
-                    if (!openSet.Contains(neighbor))
+                    if (!closedSet.Contains(neighbor))
                     {
                         openSet.Enqueue(neighbor);
                     }

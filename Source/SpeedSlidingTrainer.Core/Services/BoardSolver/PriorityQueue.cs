@@ -9,21 +9,9 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
         // https://en.wikipedia.org/wiki/Binary_heap
         private readonly List<Node> binaryHeap = new List<Node>();
 
-        private readonly HashSet<Node> hashSet = new HashSet<Node>();
-
         public int Count
         {
             get { return this.binaryHeap.Count; }
-        }
-
-        public bool Contains([NotNull] Node node)
-        {
-            if (node == null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
-
-            return this.hashSet.Contains(node);
         }
 
         public void Enqueue([NotNull] Node node)
@@ -35,7 +23,6 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
 
             int newIndex = this.binaryHeap.Count;
             this.binaryHeap.Add(node);
-            this.hashSet.Add(node);
 
             while (newIndex > 0)
             {
@@ -64,7 +51,6 @@ namespace SpeedSlidingTrainer.Core.Services.BoardSolver
             Node lastNode = this.binaryHeap[this.binaryHeap.Count - 1];
 
             this.binaryHeap.RemoveAt(this.binaryHeap.Count - 1);
-            this.hashSet.Remove(minNode);
 
             if (this.binaryHeap.Count == 0)
             {
