@@ -24,9 +24,6 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
         [NotNull]
         private readonly IDispatcher dispatcher;
 
-        [NotNull]
-        private readonly object locker = new object();
-
         private SolverServiceStatus status;
 
         [CanBeNull]
