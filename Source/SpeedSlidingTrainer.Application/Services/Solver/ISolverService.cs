@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+using JetBrains.Annotations;
 
 namespace SpeedSlidingTrainer.Application.Services.Solver
 {
@@ -8,7 +8,8 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
     {
         SolverServiceStatus Status { get; }
 
-        ObservableCollection<SolutionStep> Solution { get; }
+        [CanBeNull]
+        IReadOnlyList<SolutionStep> Solution { get; }
 
         int SolutionLength { get; }
 

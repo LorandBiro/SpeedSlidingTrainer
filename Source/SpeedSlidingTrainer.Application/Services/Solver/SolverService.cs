@@ -1,5 +1,5 @@
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -29,7 +29,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
         [CanBeNull]
         private BackgroundJob currentBackgroundJob;
 
-        private ObservableCollection<SolutionStep> solution = new ObservableCollection<SolutionStep>();
+        private IReadOnlyList<SolutionStep> solution;
 
         private int solutionLength;
 
@@ -83,7 +83,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             }
         }
 
-        public ObservableCollection<SolutionStep> Solution
+        public IReadOnlyList<SolutionStep> Solution
         {
             get
             {
@@ -208,7 +208,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 
             Step[] result = solutions[0];
             this.Status = SolverServiceStatus.Solved;
-            this.Solution = new ObservableCollection<SolutionStep>(result.Select(x => new SolutionStep(x, SolutionStepStatus.NotSteppedYet)));
+            this.Solution = result.Select(x => new SolutionStep(x, SolutionStepStatus.NotSteppedYet)).ToList();
             this.SolutionLength = result.Length;
             this.nextStepIndex = 0;
         }
