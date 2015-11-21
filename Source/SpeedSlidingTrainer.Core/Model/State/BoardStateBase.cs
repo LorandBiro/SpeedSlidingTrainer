@@ -6,7 +6,7 @@ using SpeedSlidingTrainer.Core.Model.State.Validation;
 
 namespace SpeedSlidingTrainer.Core.Model.State
 {
-    public abstract class BoardStateBase
+    public abstract class BoardStateBase : IEquatable<BoardStateBase>
     {
         [NotNull]
         private readonly int[] values;
@@ -103,6 +103,46 @@ namespace SpeedSlidingTrainer.Core.Model.State
         public int[] GetValues()
         {
             return (int[])this.values.Clone();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(obj, null) || this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            BoardStateBase other = (BoardStateBase)obj;
+            if (this.Width != other.Width || this.Height != other.Height)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < this.TileCount; i++)
+            {
+                if (this[i] != other[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool Equals(BoardStateBase other)
+        {
+            return this.Equals((object)other);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            for (int i = 0; i < this.TileCount; i++)
+            {
+                hashCode = (hashCode * 397) ^ this[i];
+            }
+
+            return hashCode;
         }
 
         [NotNull]

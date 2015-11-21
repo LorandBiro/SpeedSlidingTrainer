@@ -163,7 +163,11 @@ namespace SpeedSlidingTrainer.Application.Services.Game
         public void Scramble()
         {
             this.StartState = this.boardGeneratorService.Generate(this.drill.Template, this.drill.Goal);
-            this.Reset();
+
+            this.board = new Board(this.StartState, this.drill.Goal);
+            this.BoardState = this.board.State;
+
+            this.Status = SolveStatus.NotStarted;
             this.Scrambled?.Invoke(this, EventArgs.Empty);
         }
 

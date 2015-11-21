@@ -35,6 +35,9 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 
         private int nextStepIndex;
 
+        [CanBeNull]
+        private BoardState solvedBoardState;
+
         public SolverService(IGameService gameService, IBoardSolverService boardSolverService, IDispatcher dispatcher)
         {
             if (gameService == null)
@@ -122,7 +125,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             this.Solutions = null;
             this.currentBackgroundJob = new BackgroundJob
             {
-                State = this.gameService.StartState,
+                State = this.gameService.BoardState,
                 Goal = this.gameService.Drill.Goal,
                 CancellationTokenSource = new CancellationTokenSource()
             };
@@ -132,11 +135,12 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 
         private void GameServiceOnSlid(object sender, SlidEventArgs slidEventArgs)
         {
-            if (this.Status != SolverServiceStatus.Solved)
+            if (this.Solutions == null)
             {
                 return;
             }
 
+            this.Status = SolverServiceStatus.NotSolved;
             if (this.nextStepIndex >= this.SolutionLength)
             {
                 return;
@@ -172,12 +176,24 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
                 return;
             }
 
-            this.nextStepIndex = 0;
-            foreach (IReadOnlyList<SolutionStep> solution in this.Solutions)
+            if (this.gameService.BoardState.Equals(this.solvedBoardState))
             {
-                foreach (SolutionStep solutionStep in solution)
+                this.nextStepIndex = 0;
+                foreach (IReadOnlyList<SolutionStep> solution in this.Solutions)
                 {
-                    solutionStep.Status = SolutionStepStatus.NotSteppedYet;
+                    foreach (SolutionStep solutionStep in solution)
+                    {
+                        solutionStep.Status = SolutionStepStatus.NotSteppedYet;
+                    }
+                }
+            }
+            else
+            {
+                this.Status = SolverServiceStatus.NotSolved;
+                this.Solutions = null;
+                if (this.AutoSolve)
+                {
+                    this.StartSolveCurrentBoard();
                 }
             }
         }
@@ -223,6 +239,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
                 .ToList();
             this.SolutionLength = solutions[0].Length;
             this.nextStepIndex = 0;
+            this.solvedBoardState = job.State;
         }
 
         private class BackgroundJob

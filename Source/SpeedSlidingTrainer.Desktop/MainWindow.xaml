@@ -38,8 +38,10 @@
         <converters:EqualityToBoolConverter x:Key="SolverServiceStatusNotSolvedToBool"
                                             Comparand="{x:Static solver:SolverServiceStatus.NotSolved}" />
 
-        <converters:EqualityToVisibilityConverter x:Key="SolverServiceStatusSolvedToVisibility"
-                                                  Comparand="{x:Static solver:SolverServiceStatus.Solved}" />
+        <converters:EqualityToVisibilityConverter x:Key="SolverServiceSolutionsNotNullToVisibility"
+                                                  Comparand="{x:Null}"
+                                                  EqualsVisibility="Hidden"
+                                                  NotEqualsVisibility="Visible" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -116,7 +118,7 @@
                     Grid.Column="2"
                     MinWidth="150"
                     VerticalAlignment="Center"
-                    Visibility="{Binding SolverService.Status, Converter={StaticResource SolverServiceStatusSolvedToVisibility}}">
+                    Visibility="{Binding SolverService.Solutions, Converter={StaticResource SolverServiceSolutionsNotNullToVisibility}}">
             <TextBlock Text="Solution"
                        HorizontalAlignment="Center"
                        FontSize="24" />
