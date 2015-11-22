@@ -62,12 +62,8 @@
     <Compile Include="BoardFormatting\BoardFormatter.cs" />
     <Compile Include="BoardFormatting\IBoardFormatter.cs" />
     <Compile Include="BoardFormatting\InvalidBoardDescriptionException.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\EqualityToBoolConverter.cs" />
-    <Compile Include="Converters\EnumToBrushConverter.cs" />
-    <Compile Include="Converters\EnumBrushPair.cs" />
-    <Compile Include="Converters\EqualityToVisibilityConverter.cs" />
-    <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\SwitchConverter.cs" />
+    <Compile Include="Converters\SwitchConverterException.cs" />
     <Compile Include="DrillBrowser.xaml.cs">
       <DependentUpon>DrillBrowser.xaml</DependentUpon>
     </Compile>
@@ -151,6 +147,7 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta016\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta016\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

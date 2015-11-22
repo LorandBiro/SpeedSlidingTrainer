@@ -13,35 +13,7 @@
         Width="525"
         WindowState="Maximized">
     <Window.Resources>
-        <converters:EnumToBrushConverter x:Key="SolveStatusToBrushConverter">
-            <converters:EnumToBrushConverter.Items>
-                <converters:EnumBrushPair Key="{x:Static model:SolveStatus.NotStarted}"
-                                          Brush="#FFD3D3D3" />
-                <converters:EnumBrushPair Key="{x:Static model:SolveStatus.InProgress}"
-                                          Brush="#FFFFFF00" />
-                <converters:EnumBrushPair Key="{x:Static model:SolveStatus.Completed}"
-                                          Brush="#FFADFF2F" />
-            </converters:EnumToBrushConverter.Items>
-        </converters:EnumToBrushConverter>
-
-        <converters:EnumToBrushConverter x:Key="SolutionStepStatusToBrushConverter">
-            <converters:EnumToBrushConverter.Items>
-                <converters:EnumBrushPair Key="{x:Static solver:SolutionStepStatus.NotSteppedYet}"
-                                          Brush="Black" />
-                <converters:EnumBrushPair Key="{x:Static solver:SolutionStepStatus.Stepped}"
-                                          Brush="Green" />
-                <converters:EnumBrushPair Key="{x:Static solver:SolutionStepStatus.Misstepped}"
-                                          Brush="Red" />
-            </converters:EnumToBrushConverter.Items>
-        </converters:EnumToBrushConverter>
-
-        <converters:EqualityToBoolConverter x:Key="SolverServiceStatusNotSolvedToBool"
-                                            Comparand="{x:Static solver:SolverServiceStatus.NotSolved}" />
-
-        <converters:EqualityToVisibilityConverter x:Key="SolverServiceSolutionsNotNullToVisibility"
-                                                  Comparand="{x:Null}"
-                                                  EqualsVisibility="Hidden"
-                                                  NotEqualsVisibility="Visible" />
+        <converters:SwitchConverter x:Key="SwitchConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -60,7 +32,7 @@
               Grid.ColumnSpan="3"
               Height="64"
               VerticalAlignment="Top"
-              Background="{Binding GameService.Status, Converter={StaticResource SolveStatusToBrushConverter}}">
+              Background="{Binding GameService.Status, Converter={StaticResource SwitchConverter}, ConverterParameter='NotStarted: #FFD3D3D3; InProgress: #FFFFFF00; Completed: #FFADFF2F'}">
             <TextBlock x:Name="DurationTextBlock"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
@@ -118,7 +90,7 @@
                     Grid.Column="2"
                     MinWidth="150"
                     VerticalAlignment="Center"
-                    Visibility="{Binding SolverService.Solutions, Converter={StaticResource SolverServiceSolutionsNotNullToVisibility}}">
+                    Visibility="{Binding SolverService.Solutions, Converter={StaticResource SwitchConverter}, ConverterParameter='null: Hidden; Visible'}">
             <TextBlock Text="Solution"
                        HorizontalAlignment="Center"
                        FontSize="24" />
@@ -143,7 +115,7 @@
                                     <TextBlock HorizontalAlignment="Center"
                                                FontWeight="Bold"
                                                Text="{Binding Step}"
-                                               Foreground="{Binding Status, Converter={StaticResource SolutionStepStatusToBrushConverter}}" />
+                                               Foreground="{Binding Status, Converter={StaticResource SwitchConverter}, ConverterParameter='NotSteppedYet: Black; Stepped: Green; Misstepped: Red'}" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -184,7 +156,7 @@
                     Margin="8,8,8,8"
                     Click="OnSolveButtonClick"
                     Focusable="False"
-                    IsEnabled="{Binding SolverService.Status, Converter={StaticResource SolverServiceStatusNotSolvedToBool}}" />
+                    IsEnabled="{Binding SolverService.Status, Converter={StaticResource SwitchConverter}, ConverterParameter='NotSolved: true; false'}" />
         </Grid>
     </Grid>
 </Window>
