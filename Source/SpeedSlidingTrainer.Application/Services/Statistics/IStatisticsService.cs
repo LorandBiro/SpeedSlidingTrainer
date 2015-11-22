@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace SpeedSlidingTrainer.Application.Services.Statistics
@@ -7,6 +8,10 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
     {
         int StepCount { get; }
 
+        int? OptimalStepCount { get; }
+
         TimeSpan Duration { get; }
+
+        IReadOnlyList<SolveStatistics> LastSolves { get; }
     }
 }

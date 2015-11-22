@@ -31,7 +31,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 
         private IReadOnlyList<IReadOnlyList<SolutionStep>> solutions;
 
-        private int solutionLength;
+        private int? solutionLength;
 
         private int nextStepIndex;
 
@@ -64,6 +64,8 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public event EventHandler<BoardSolvedEventArgs> BoardSolved;
 
         public bool AutoSolve { get; set; }
 
@@ -100,7 +102,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             }
         }
 
-        public int SolutionLength
+        public int? SolutionLength
         {
             get
             {
@@ -191,6 +193,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             {
                 this.Status = SolverServiceStatus.NotSolved;
                 this.Solutions = null;
+                this.SolutionLength = null;
                 if (this.AutoSolve)
                 {
                     this.StartSolveCurrentBoard();
@@ -207,6 +210,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 
             this.Status = SolverServiceStatus.NotSolved;
             this.Solutions = null;
+            this.SolutionLength = null;
             if (this.AutoSolve)
             {
                 this.StartSolveCurrentBoard();
@@ -237,9 +241,12 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
                 .OrderBy(solution => string.Join(",", solution))
                 .Select(solution => solution.Select(step => new SolutionStep(step, SolutionStepStatus.NotSteppedYet)).ToList())
                 .ToList();
+
             this.SolutionLength = solutions[0].Length;
             this.nextStepIndex = 0;
             this.solvedBoardState = job.State;
+
+            this.BoardSolved?.Invoke(this, new BoardSolvedEventArgs(job.State, solutions));
         }
 
         private class BackgroundJob

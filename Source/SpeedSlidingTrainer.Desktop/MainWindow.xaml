@@ -25,11 +25,12 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <Grid x:Name="StatePanelGrid"
               Grid.Column="0"
-              Grid.ColumnSpan="3"
+              Grid.ColumnSpan="4"
               Height="64"
               VerticalAlignment="Top"
               Background="{Binding GameService.Status, Converter={StaticResource SwitchConverter}, ConverterParameter='NotStarted: #FFD3D3D3; InProgress: #FFFFFF00; Completed: #FFADFF2F'}">
@@ -89,7 +90,6 @@
         <StackPanel Grid.Row="1"
                     Grid.Column="2"
                     MinWidth="150"
-                    VerticalAlignment="Center"
                     Visibility="{Binding SolverService.Solutions, Converter={StaticResource SwitchConverter}, ConverterParameter='null: Hidden; Visible'}">
             <TextBlock Text="Solution"
                        HorizontalAlignment="Center"
@@ -124,6 +124,27 @@
             </ItemsControl>
         </StackPanel>
 
+        <StackPanel Grid.Row="1"
+                    Grid.Column="3"
+                    MinWidth="150">
+            <TextBlock Text="Session"
+                       HorizontalAlignment="Center"
+                       FontSize="24" />
+            <ItemsControl ItemsSource="{Binding StatisticsService.LastSolves}"
+                          Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Time, StringFormat=mm\\:ss\\.ff}" Margin="4,0,4,0" />
+                            <TextBlock Text="{Binding Moves}" Margin="4,0,4,0" />
+                            <TextBlock Text="{Binding Tps, StringFormat=0.00}" Margin="4,0,4,0" />
+                            <TextBlock Text="{Binding Efficiency, StringFormat=0.00}" Margin="4,0,4,0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
         <CheckBox IsChecked="{Binding SolverService.AutoSolve}"
                   Content="_Auto Solve"
                   HorizontalAlignment="Right"
@@ -135,7 +156,7 @@
 
         <Grid Grid.Row="2"
               Grid.Column="0"
-              Grid.ColumnSpan="3"
+              Grid.ColumnSpan="4"
               Height="64">
             <StackPanel Orientation="Horizontal">
                 <Button Content="_Reset (esc)"

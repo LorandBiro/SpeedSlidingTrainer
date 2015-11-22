@@ -31,11 +31,11 @@ namespace SpeedSlidingTrainer.Desktop
         // Application services
         public static IGameService GameService { get; } = new GameService(BoardGeneratorService);
 
-        public static IStatisticsService StatisticsService { get; } = new StatisticsService(GameService, TimerFactory);
+        public static ISolverService SolverService { get; } = new SolverService(GameService, BoardSolverService, Dispatcher);
+
+        public static IStatisticsService StatisticsService { get; } = new StatisticsService(GameService, SolverService, TimerFactory);
 
         public static IDrillService DrillService { get; } = new DrillService(DrillRepository);
-
-        public static ISolverService SolverService { get; } = new SolverService(GameService, BoardSolverService, Dispatcher);
 
         // Presentation compontents
         public static IBoardFormatter BoardFormatter { get; } = new BoardFormatter();
