@@ -3,11 +3,11 @@ using JetBrains.Annotations;
 using SpeedSlidingTrainer.Core.Model;
 using SpeedSlidingTrainer.Core.Model.State;
 
-namespace SpeedSlidingTrainer.Application.Services.Solver
+namespace SpeedSlidingTrainer.Application.Events
 {
-    public sealed class BoardSolvedEventArgs : EventArgs
+    public sealed class SolutionsFound
     {
-        public BoardSolvedEventArgs([NotNull] BoardState state, [NotNull] Step[][] solutions)
+        public SolutionsFound([NotNull] BoardState state, [NotNull] Step[][] solutions)
         {
             if (state == null)
             {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using JetBrains.Annotations;
+using SpeedSlidingTrainer.Application.Events;
 using SpeedSlidingTrainer.Application.Infrastructure;
 using SpeedSlidingTrainer.Application.Services.Game;
-using SpeedSlidingTrainer.Application.Services.Solver;
 using SpeedSlidingTrainer.Core.Model;
 
 namespace SpeedSlidingTrainer.Application.Services.Statistics
@@ -14,9 +14,6 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
     {
         [NotNull]
         private readonly IGameService gameService;
-
-        [NotNull]
-        private readonly ISolverService solverService;
 
         [NotNull]
         private readonly ITimer timer;
@@ -34,29 +31,27 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
         [NotNull]
         private IReadOnlyList<SolveStatistics> lastSolves = new SolveStatistics[0];
 
-        public StatisticsService([NotNull] IGameService gameService, [NotNull] ISolverService solverService, [NotNull] ITimerFactory timer)
+        public StatisticsService([NotNull] IMessageQueue messageQueue, [NotNull] IGameService gameService, [NotNull] ITimerFactory timerFactory)
         {
+            if (messageQueue == null)
+            {
+                throw new ArgumentNullException(nameof(messageQueue));
+            }
+
             if (gameService == null)
             {
                 throw new ArgumentNullException(nameof(gameService));
             }
 
-            if (solverService == null)
-            {
-                throw new ArgumentNullException(nameof(solverService));
-            }
-
             this.gameService = gameService;
-            this.solverService = solverService;
-            this.timer = timer.Create(TimeSpan.FromMilliseconds(25), this.OnTick);
+            this.timer = timerFactory.Create(TimeSpan.FromMilliseconds(25), this.OnTick);
 
-            this.gameService.SolveStarted += this.GameServiceOnSolveStarted;
-            this.gameService.SolveCompleted += this.GameServiceOnSolveCompleted;
-            this.gameService.Resetted += this.GameServiceOnResetted;
-            this.gameService.Scrambled += this.GameServiceOnScrambled;
-            this.gameService.Slid += this.GameServiceOnSlid;
-
-            this.solverService.BoardSolved += this.SolverServiceOnBoardSolved;
+            messageQueue.Subscribe<BoardScrambled>(this.OnBoardScrambled);
+            messageQueue.Subscribe<BoardResetted>(this.OnBoardResetted);
+            messageQueue.Subscribe<SolveStarted>(this.OnSolveStarted);
+            messageQueue.Subscribe<SolveCompleted>(this.OnSolveCompleted);
+            messageQueue.Subscribe<SlideHappened>(this.OnSlideHappened);
+            messageQueue.Subscribe<SolutionsFound>(this.OnSolutionFound);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -127,13 +122,13 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
             }
         }
 
-        private void GameServiceOnSolveStarted(object sender, EventArgs eventArgs)
+        private void OnSolveStarted(SolveStarted message)
         {
             this.startedAt = DateTime.UtcNow;
             this.timer.Start();
         }
 
-        private void GameServiceOnSolveCompleted(object sender, EventArgs eventArgs)
+        private void OnSolveCompleted(SolveCompleted message)
         {
             this.completedAt = DateTime.UtcNow;
             this.timer.Stop();
@@ -150,13 +145,13 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
             this.LastSolves = temp;
         }
 
-        private void GameServiceOnResetted(object sender, EventArgs eventArgs)
+        private void OnBoardResetted(BoardResetted message)
         {
             this.StepCount = 0;
             this.Duration = TimeSpan.Zero;
         }
 
-        private void GameServiceOnScrambled(object sender, EventArgs eventArgs)
+        private void OnBoardScrambled(BoardScrambled message)
         {
             this.StepCount = 0;
             this.OptimalStepCount = null;
@@ -173,7 +168,7 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
             this.Duration = DateTime.UtcNow - this.startedAt;
         }
 
-        private void GameServiceOnSlid(object sender, SlidEventArgs e)
+        private void OnSlideHappened(SlideHappened message)
         {
             if (this.gameService.Status == SolveStatus.InProgress)
             {
@@ -181,11 +176,11 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
             }
         }
 
-        private void SolverServiceOnBoardSolved(object sender, BoardSolvedEventArgs e)
+        private void OnSolutionFound(SolutionsFound message)
         {
-            if (e.State.Equals(this.gameService.StartState))
+            if (message.State.Equals(this.gameService.StartState))
             {
-                this.OptimalStepCount = e.Solutions[0].Length;
+                this.OptimalStepCount = message.Solutions[0].Length;
             }
         }
     }

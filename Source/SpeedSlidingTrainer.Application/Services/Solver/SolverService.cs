@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using SpeedSlidingTrainer.Application.Events;
 using SpeedSlidingTrainer.Application.Infrastructure;
 using SpeedSlidingTrainer.Application.Services.Game;
 using SpeedSlidingTrainer.Core.Model;
@@ -15,6 +16,9 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 {
     public sealed class SolverService : ISolverService
     {
+        [NotNull]
+        private readonly IMessageQueue messageQueue;
+
         [NotNull]
         private readonly IGameService gameService;
 
@@ -38,8 +42,17 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
         [CanBeNull]
         private BoardState solvedBoardState;
 
-        public SolverService(IGameService gameService, IBoardSolverService boardSolverService, IDispatcher dispatcher)
+        public SolverService(
+            [NotNull] IMessageQueue messageQueue,
+            [NotNull] IGameService gameService,
+            [NotNull] IBoardSolverService boardSolverService,
+            [NotNull] IDispatcher dispatcher)
         {
+            if (messageQueue == null)
+            {
+                throw new ArgumentNullException(nameof(messageQueue));
+            }
+
             if (gameService == null)
             {
                 throw new ArgumentNullException(nameof(gameService));
@@ -55,18 +68,19 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
                 throw new ArgumentNullException(nameof(dispatcher));
             }
 
+            this.messageQueue = messageQueue;
             this.gameService = gameService;
-            this.gameService.Scrambled += this.GameServiceOnScrambled;
-            this.gameService.Slid += this.GameServiceOnSlid;
-            this.gameService.Resetted += this.GameServiceOnResetted;
             this.boardSolverService = boardSolverService;
             this.dispatcher = dispatcher;
+
+            this.messageQueue.Subscribe<BoardScrambled>(this.OnBoardScrambled);
+            this.messageQueue.Subscribe<BoardResetted>(this.OnBoardResetted);
+            this.messageQueue.Subscribe<SlideHappened>(this.OnSlideHappened);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public event EventHandler<BoardSolvedEventArgs> BoardSolved;
-
+        [UsedImplicitly]
         public bool AutoSolve { get; set; }
 
         public SolverServiceStatus Status
@@ -135,7 +149,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             Task.Factory.StartNew(() => this.BackgroundThreadMain(this.currentBackgroundJob), this.currentBackgroundJob.CancellationTokenSource.Token);
         }
 
-        private void GameServiceOnSlid(object sender, SlidEventArgs slidEventArgs)
+        private void OnSlideHappened(SlideHappened message)
         {
             if (this.Solutions == null)
             {
@@ -155,7 +169,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
                     continue;
                 }
 
-                if (solution[this.nextStepIndex].Step == slidEventArgs.Step)
+                if (solution[this.nextStepIndex].Step == message.Step)
                 {
                     solution[this.nextStepIndex].Status = SolutionStepStatus.Stepped;
                 }
@@ -171,7 +185,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             this.nextStepIndex++;
         }
 
-        private void GameServiceOnResetted(object sender, EventArgs eventArgs)
+        private void OnBoardResetted(BoardResetted message)
         {
             if (this.Solutions == null)
             {
@@ -201,7 +215,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             }
         }
 
-        private void GameServiceOnScrambled(object sender, EventArgs eventArgs)
+        private void OnBoardScrambled(BoardScrambled message)
         {
             if (this.Status == SolverServiceStatus.Solving)
             {
@@ -246,7 +260,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             this.nextStepIndex = 0;
             this.solvedBoardState = job.State;
 
-            this.BoardSolved?.Invoke(this, new BoardSolvedEventArgs(job.State, solutions));
+            this.messageQueue.Publish(new SolutionsFound(job.State, solutions));
         }
 
         private class BackgroundJob

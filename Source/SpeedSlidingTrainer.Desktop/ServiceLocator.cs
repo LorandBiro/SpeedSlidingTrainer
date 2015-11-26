@@ -19,25 +19,27 @@ namespace SpeedSlidingTrainer.Desktop
 
         public static IBoardGeneratorService BoardGeneratorService { get; } = new BoardGeneratorService();
 
-        // Application compontents
+        // Application components
         public static ITimerFactory TimerFactory { get; } = new TimerAdapterFactory();
 
         public static IDataStorage DataStorage { get; } = new FileDataStorage();
 
         public static IDispatcher Dispatcher { get; } = new WpfDispatcher();
 
+        public static IMessageQueue MessageQueue { get; } = new MessageQueue();
+
         public static IRepository<Drill> DrillRepository { get; } = new DrillRepository(DataStorage);
 
         // Application services
-        public static IGameService GameService { get; } = new GameService(BoardGeneratorService);
+        public static IGameService GameService { get; } = new GameService(MessageQueue, BoardGeneratorService);
 
-        public static ISolverService SolverService { get; } = new SolverService(GameService, BoardSolverService, Dispatcher);
+        public static ISolverService SolverService { get; } = new SolverService(MessageQueue, GameService, BoardSolverService, Dispatcher);
 
-        public static IStatisticsService StatisticsService { get; } = new StatisticsService(GameService, SolverService, TimerFactory);
+        public static IStatisticsService StatisticsService { get; } = new StatisticsService(MessageQueue, GameService, TimerFactory);
 
         public static IDrillService DrillService { get; } = new DrillService(DrillRepository);
 
-        // Presentation compontents
+        // Presentation components
         public static IBoardFormatter BoardFormatter { get; } = new BoardFormatter();
     }
 }

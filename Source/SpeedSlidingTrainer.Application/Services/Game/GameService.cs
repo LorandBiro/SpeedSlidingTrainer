@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using JetBrains.Annotations;
+using SpeedSlidingTrainer.Application.Events;
+using SpeedSlidingTrainer.Application.Infrastructure;
 using SpeedSlidingTrainer.Core.Model;
 using SpeedSlidingTrainer.Core.Model.State;
 using SpeedSlidingTrainer.Core.Services.BoardGenerator;
@@ -9,6 +11,9 @@ namespace SpeedSlidingTrainer.Application.Services.Game
 {
     public class GameService : IGameService
     {
+        [NotNull]
+        private readonly IMessageQueue messageQueue;
+
         [NotNull]
         private readonly IBoardGeneratorService boardGeneratorService;
 
@@ -23,13 +28,19 @@ namespace SpeedSlidingTrainer.Application.Services.Game
         [NotNull]
         private BoardState boardState;
 
-        public GameService([NotNull] IBoardGeneratorService boardGeneratorService)
+        public GameService([NotNull] IMessageQueue messageQueue, [NotNull] IBoardGeneratorService boardGeneratorService)
         {
+            if (messageQueue == null)
+            {
+                throw new ArgumentNullException(nameof(messageQueue));
+            }
+
             if (boardGeneratorService == null)
             {
                 throw new ArgumentNullException(nameof(boardGeneratorService));
             }
 
+            this.messageQueue = messageQueue;
             this.boardGeneratorService = boardGeneratorService;
 
             this.StartState = BoardState.CreateCompleted(4, 4);
@@ -45,16 +56,6 @@ namespace SpeedSlidingTrainer.Application.Services.Game
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public event EventHandler<SlidEventArgs> Slid;
-
-        public event EventHandler SolveStarted;
-
-        public event EventHandler SolveCompleted;
-
-        public event EventHandler Resetted;
-
-        public event EventHandler Scrambled;
 
         public SolveStatus Status
         {
@@ -168,7 +169,7 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             this.BoardState = this.board.State;
 
             this.Status = SolveStatus.NotStarted;
-            this.Scrambled?.Invoke(this, EventArgs.Empty);
+            this.messageQueue.Publish(new BoardScrambled());
         }
 
         public void Reset()
@@ -177,7 +178,7 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             this.BoardState = this.board.State;
 
             this.Status = SolveStatus.NotStarted;
-            this.Resetted?.Invoke(this, EventArgs.Empty);
+            this.messageQueue.Publish(new BoardResetted());
         }
 
         private void OnSlide(Step step)
@@ -185,10 +186,10 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             if (this.Status == SolveStatus.NotStarted)
             {
                 this.Status = SolveStatus.InProgress;
-                this.SolveStarted?.Invoke(this, EventArgs.Empty);
+                this.messageQueue.Publish(new SolveStarted());
             }
 
-            this.Slid?.Invoke(this, new SlidEventArgs(step));
+            this.messageQueue.Publish(new SlideHappened(step));
             this.BoardState = this.board.State;
 
             if (this.Status == SolveStatus.InProgress)
@@ -196,7 +197,7 @@ namespace SpeedSlidingTrainer.Application.Services.Game
                 if (this.board.IsComplete)
                 {
                     this.Status = SolveStatus.Completed;
-                    this.SolveCompleted?.Invoke(this, EventArgs.Empty);
+                    this.messageQueue.Publish(new SolveCompleted());
                 }
             }
         }

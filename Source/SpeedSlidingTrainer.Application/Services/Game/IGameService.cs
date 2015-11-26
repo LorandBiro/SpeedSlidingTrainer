@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using JetBrains.Annotations;
 using SpeedSlidingTrainer.Core.Model;
@@ -8,16 +7,6 @@ namespace SpeedSlidingTrainer.Application.Services.Game
 {
     public interface IGameService : INotifyPropertyChanged
     {
-        event EventHandler<SlidEventArgs> Slid;
-
-        event EventHandler SolveStarted;
-
-        event EventHandler SolveCompleted;
-
-        event EventHandler Resetted;
-
-        event EventHandler Scrambled;
-
         SolveStatus Status { get; }
 
         [NotNull]
