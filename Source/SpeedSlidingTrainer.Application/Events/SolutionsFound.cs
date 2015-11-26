@@ -7,11 +7,11 @@ namespace SpeedSlidingTrainer.Application.Events
 {
     public sealed class SolutionsFound
     {
-        public SolutionsFound([NotNull] BoardState state, [NotNull] Step[][] solutions)
+        public SolutionsFound([NotNull] BoardState initialState, [NotNull] BoardState solvedState, [NotNull] Step[][] solutions)
         {
-            if (state == null)
+            if (solvedState == null)
             {
-                throw new ArgumentNullException(nameof(state));
+                throw new ArgumentNullException(nameof(solvedState));
             }
 
             if (solutions == null)
@@ -19,12 +19,21 @@ namespace SpeedSlidingTrainer.Application.Events
                 throw new ArgumentNullException(nameof(solutions));
             }
 
-            this.State = state;
+            if (initialState == null)
+            {
+                throw new ArgumentNullException(nameof(initialState));
+            }
+
+            this.SolvedState = solvedState;
             this.Solutions = solutions;
+            this.InitialState = initialState;
         }
 
         [NotNull]
-        public BoardState State { get; }
+        public BoardState InitialState { get; }
+
+        [NotNull]
+        public BoardState SolvedState { get; }
 
         [NotNull]
         public Step[][] Solutions { get; }

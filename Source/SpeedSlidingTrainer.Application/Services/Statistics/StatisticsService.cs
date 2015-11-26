@@ -178,7 +178,7 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
 
         private void OnSolutionFound(SolutionsFound message)
         {
-            if (message.State.Equals(this.gameService.StartState))
+            if (message.SolvedState.Equals(message.InitialState))
             {
                 this.OptimalStepCount = message.Solutions[0].Length;
             }

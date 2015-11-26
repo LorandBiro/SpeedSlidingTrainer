@@ -141,7 +141,8 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             this.Solutions = null;
             this.currentBackgroundJob = new BackgroundJob
             {
-                State = this.gameService.BoardState,
+                InitialState = this.gameService.StartState,
+                StateToSolve = this.gameService.BoardState,
                 Goal = this.gameService.Drill.Goal,
                 CancellationTokenSource = new CancellationTokenSource()
             };
@@ -235,7 +236,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
         {
             try
             {
-                Step[][] solutions = this.boardSolverService.GetSolution(job.State, job.Goal, job.CancellationTokenSource.Token);
+                Step[][] solutions = this.boardSolverService.GetSolution(job.StateToSolve, job.Goal, job.CancellationTokenSource.Token);
                 this.dispatcher.BeginInvoke(() => this.OnSolved(job, solutions));
             }
             catch (OperationCanceledException)
@@ -258,14 +259,16 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
 
             this.SolutionLength = solutions[0].Length;
             this.nextStepIndex = 0;
-            this.solvedBoardState = job.State;
+            this.solvedBoardState = job.StateToSolve;
 
-            this.messageQueue.Publish(new SolutionsFound(job.State, solutions));
+            this.messageQueue.Publish(new SolutionsFound(job.InitialState, job.StateToSolve, solutions));
         }
 
         private class BackgroundJob
         {
-            public BoardState State { get; set; }
+            public BoardState InitialState { get; set; }
+
+            public BoardState StateToSolve { get; set; }
 
             public BoardGoal Goal { get; set; }
 
