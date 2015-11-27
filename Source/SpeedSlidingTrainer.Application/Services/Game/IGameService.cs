@@ -7,8 +7,6 @@ namespace SpeedSlidingTrainer.Application.Services.Game
 {
     public interface IGameService : INotifyPropertyChanged
     {
-        SolveStatus Status { get; }
-
         [NotNull]
         BoardState StartState { get; }
 

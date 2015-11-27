@@ -70,9 +70,9 @@
     <Compile Include="Services\Solver\SolutionStepStatus.cs" />
     <Compile Include="Services\Solver\SolverService.cs" />
     <Compile Include="Services\Solver\SolverServiceStatus.cs" />
-    <Compile Include="Services\Statistics\IStatisticsService.cs" />
-    <Compile Include="Services\Statistics\SolveStatistics.cs" />
-    <Compile Include="Services\Statistics\StatisticsService.cs" />
+    <Compile Include="Services\SolveState\ISolveStateService.cs" />
+    <Compile Include="Services\SolveState\SolveStatistics.cs" />
+    <Compile Include="Services\SolveState\SolveStateService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations.PCL328">

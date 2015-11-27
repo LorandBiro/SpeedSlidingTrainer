@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using SpeedSlidingTrainer.Core.Model;
 
-namespace SpeedSlidingTrainer.Application.Services.Statistics
+namespace SpeedSlidingTrainer.Application.Services.SolveState
 {
-    public interface IStatisticsService : INotifyPropertyChanged
+    public interface ISolveStateService : INotifyPropertyChanged
     {
+        SolveStatus Status { get; }
+
         int StepCount { get; }
 
         int? OptimalStepCount { get; }

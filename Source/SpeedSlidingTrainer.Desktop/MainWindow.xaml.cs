@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using SpeedSlidingTrainer.Application.Services.Game;
 using SpeedSlidingTrainer.Application.Services.Solver;
-using SpeedSlidingTrainer.Application.Services.Statistics;
+using SpeedSlidingTrainer.Application.Services.SolveState;
 
 namespace SpeedSlidingTrainer.Desktop
 {
@@ -17,7 +17,7 @@ namespace SpeedSlidingTrainer.Desktop
 
         public IGameService GameService { get; } = ServiceLocator.GameService;
 
-        public IStatisticsService StatisticsService { get; } = ServiceLocator.StatisticsService;
+        public ISolveStateService SolveStateService { get; } = ServiceLocator.SolveStateService;
 
         public ISolverService SolverService { get; } = ServiceLocator.SolverService;
 

@@ -5,18 +5,19 @@ using System.Linq;
 using JetBrains.Annotations;
 using SpeedSlidingTrainer.Application.Events;
 using SpeedSlidingTrainer.Application.Infrastructure;
-using SpeedSlidingTrainer.Application.Services.Game;
 using SpeedSlidingTrainer.Core.Model;
 
-namespace SpeedSlidingTrainer.Application.Services.Statistics
+namespace SpeedSlidingTrainer.Application.Services.SolveState
 {
-    public sealed class StatisticsService : IStatisticsService
+    public sealed class SolveStateService : ISolveStateService
     {
         [NotNull]
-        private readonly IGameService gameService;
+        private readonly IMessageQueue messageQueue;
 
         [NotNull]
         private readonly ITimer timer;
+
+        private SolveStatus status = SolveStatus.Completed;
 
         private int stepCount;
 
@@ -31,30 +32,44 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
         [NotNull]
         private IReadOnlyList<SolveStatistics> lastSolves = new SolveStatistics[0];
 
-        public StatisticsService([NotNull] IMessageQueue messageQueue, [NotNull] IGameService gameService, [NotNull] ITimerFactory timerFactory)
+        public SolveStateService([NotNull] IMessageQueue messageQueue, [NotNull] ITimerFactory timerFactory)
         {
             if (messageQueue == null)
             {
                 throw new ArgumentNullException(nameof(messageQueue));
             }
 
-            if (gameService == null)
-            {
-                throw new ArgumentNullException(nameof(gameService));
-            }
-
-            this.gameService = gameService;
+            this.messageQueue = messageQueue;
             this.timer = timerFactory.Create(TimeSpan.FromMilliseconds(25), this.OnTick);
 
-            messageQueue.Subscribe<BoardScrambled>(this.OnBoardScrambled);
-            messageQueue.Subscribe<BoardResetted>(this.OnBoardResetted);
-            messageQueue.Subscribe<SolveStarted>(this.OnSolveStarted);
-            messageQueue.Subscribe<SolveCompleted>(this.OnSolveCompleted);
-            messageQueue.Subscribe<SlideHappened>(this.OnSlideHappened);
-            messageQueue.Subscribe<SolutionsFound>(this.OnSolutionFound);
+            this.messageQueue.Subscribe<BoardScrambled>(this.OnBoardScrambled);
+            this.messageQueue.Subscribe<BoardResetted>(this.OnBoardResetted);
+            this.messageQueue.Subscribe<SolveStarted>(this.OnSolveStarted);
+            this.messageQueue.Subscribe<SolveCompleted>(this.OnSolveCompleted);
+            this.messageQueue.Subscribe<SlideHappened>(this.OnSlideHappened);
+            this.messageQueue.Subscribe<SolutionsFound>(this.OnSolutionFound);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public SolveStatus Status
+        {
+            get
+            {
+                return this.status;
+            }
+
+            private set
+            {
+                if (this.Status == value)
+                {
+                    return;
+                }
+
+                this.status = value;
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Status)));
+            }
+        }
 
         public int StepCount
         {
@@ -147,12 +162,14 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
 
         private void OnBoardResetted(BoardResetted message)
         {
+            this.Status = SolveStatus.NotStarted;
             this.StepCount = 0;
             this.Duration = TimeSpan.Zero;
         }
 
         private void OnBoardScrambled(BoardScrambled message)
         {
+            this.Status = SolveStatus.NotStarted;
             this.StepCount = 0;
             this.OptimalStepCount = null;
             this.Duration = TimeSpan.Zero;
@@ -160,7 +177,7 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
 
         private void OnTick()
         {
-            if (this.gameService.Status != SolveStatus.InProgress)
+            if (this.Status != SolveStatus.InProgress)
             {
                 return;
             }
@@ -170,9 +187,20 @@ namespace SpeedSlidingTrainer.Application.Services.Statistics
 
         private void OnSlideHappened(SlideHappened message)
         {
-            if (this.gameService.Status == SolveStatus.InProgress)
+            if (this.Status == SolveStatus.NotStarted)
+            {
+                this.Status = SolveStatus.InProgress;
+                this.messageQueue.Publish(new SolveStarted());
+            }
+
+            if (this.Status == SolveStatus.InProgress)
             {
                 this.StepCount++;
+                if (message.BoardSolved)
+                {
+                    this.Status = SolveStatus.Completed;
+                    this.messageQueue.Publish(new SolveCompleted());
+                }
             }
         }
 

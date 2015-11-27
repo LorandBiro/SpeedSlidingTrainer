@@ -33,18 +33,18 @@
               Grid.ColumnSpan="4"
               Height="64"
               VerticalAlignment="Top"
-              Background="{Binding GameService.Status, Converter={StaticResource SwitchConverter}, ConverterParameter='NotStarted: #FFD3D3D3; InProgress: #FFFFFF00; Completed: #FFADFF2F'}">
+              Background="{Binding SolveStateService.Status, Converter={StaticResource SwitchConverter}, ConverterParameter='NotStarted: #FFD3D3D3; InProgress: #FFFFFF00; Completed: #FFADFF2F'}">
             <TextBlock x:Name="DurationTextBlock"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Text="{Binding StatisticsService.Duration, StringFormat=mm\\:ss\\.ff}"
+                       Text="{Binding SolveStateService.Duration, StringFormat=mm\\:ss\\.ff}"
                        FontSize="28" />
 
             <TextBlock x:Name="MoveCountTextBlock"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
                        Margin="0,0,16,0"
-                       Text="{Binding StatisticsService.StepCount}"
+                       Text="{Binding SolveStateService.StepCount}"
                        FontSize="36" />
         </Grid>
 
@@ -130,7 +130,7 @@
             <TextBlock Text="Session"
                        HorizontalAlignment="Center"
                        FontSize="24" />
-            <ItemsControl ItemsSource="{Binding StatisticsService.LastSolves}"
+            <ItemsControl ItemsSource="{Binding SolveStateService.LastSolves}"
                           Focusable="False">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

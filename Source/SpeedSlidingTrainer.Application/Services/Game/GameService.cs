@@ -23,8 +23,6 @@ namespace SpeedSlidingTrainer.Application.Services.Game
         [NotNull]
         private Board board;
 
-        private SolveStatus status;
-
         [NotNull]
         private BoardState boardState;
 
@@ -51,30 +49,9 @@ namespace SpeedSlidingTrainer.Application.Services.Game
 
             this.board = new Board(this.StartState, this.drill.Goal);
             this.boardState = this.board.State;
-
-            this.Status = SolveStatus.Completed;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public SolveStatus Status
-        {
-            get
-            {
-                return this.status;
-            }
-
-            private set
-            {
-                if (this.Status == value)
-                {
-                    return;
-                }
-
-                this.status = value;
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Status)));
-            }
-        }
 
         public BoardState StartState { get; private set; }
 
@@ -168,7 +145,6 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             this.board = new Board(this.StartState, this.drill.Goal);
             this.BoardState = this.board.State;
 
-            this.Status = SolveStatus.NotStarted;
             this.messageQueue.Publish(new BoardScrambled());
         }
 
@@ -177,29 +153,13 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             this.board = new Board(this.StartState, this.drill.Goal);
             this.BoardState = this.board.State;
 
-            this.Status = SolveStatus.NotStarted;
             this.messageQueue.Publish(new BoardResetted());
         }
 
         private void OnSlide(Step step)
         {
-            if (this.Status == SolveStatus.NotStarted)
-            {
-                this.Status = SolveStatus.InProgress;
-                this.messageQueue.Publish(new SolveStarted());
-            }
-
-            this.messageQueue.Publish(new SlideHappened(step));
             this.BoardState = this.board.State;
-
-            if (this.Status == SolveStatus.InProgress)
-            {
-                if (this.board.IsComplete)
-                {
-                    this.Status = SolveStatus.Completed;
-                    this.messageQueue.Publish(new SolveCompleted());
-                }
-            }
+            this.messageQueue.Publish(new SlideHappened(step, this.board.IsComplete));
         }
     }
 }
