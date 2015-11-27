@@ -14,6 +14,16 @@ namespace SpeedSlidingTrainer.Application.Services.SessionStatistics
         [NotNull]
         private readonly Queue<SolveStatistics> lastSolvesQueue = new Queue<SolveStatistics>();
 
+        private readonly AggregatedSolveStatistics last5Statistics = new AggregatedSolveStatistics(5);
+
+        private readonly AggregatedSolveStatistics last12Statistics = new AggregatedSolveStatistics(12);
+
+        private readonly AggregatedSolveStatistics last50Statistics = new AggregatedSolveStatistics(50);
+
+        private readonly AggregatedSolveStatistics last100Statistics = new AggregatedSolveStatistics(100);
+
+        private readonly AggregatedSolveStatistics fullStatistics = new AggregatedSolveStatistics(null);
+
         [NotNull]
         private IReadOnlyList<SolveStatistics> lastSolves = new SolveStatistics[0];
 
@@ -25,6 +35,7 @@ namespace SpeedSlidingTrainer.Application.Services.SessionStatistics
             }
 
             messageBus.Subscribe<SolveCompleted>(this.OnSolveCompleted);
+            messageBus.Subscribe<DrillChanged>(this.OnDrillChanged);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -43,6 +54,28 @@ namespace SpeedSlidingTrainer.Application.Services.SessionStatistics
             }
         }
 
+        public IAggregatedSolveStatistics Last5Statistics => this.last5Statistics;
+
+        public IAggregatedSolveStatistics Last12Statistics => this.last12Statistics;
+
+        public IAggregatedSolveStatistics Last50Statistics => this.last50Statistics;
+
+        public IAggregatedSolveStatistics Last100Statistics => this.last100Statistics;
+
+        public IAggregatedSolveStatistics FullStatistics => this.fullStatistics;
+
+        public void Clear()
+        {
+            this.lastSolvesQueue.Clear();
+            this.LastSolves = new SolveStatistics[0];
+
+            this.last5Statistics.Clear();
+            this.last12Statistics.Clear();
+            this.last50Statistics.Clear();
+            this.last100Statistics.Clear();
+            this.fullStatistics.Clear();
+        }
+
         private void OnSolveCompleted(SolveCompleted message)
         {
             this.lastSolvesQueue.Enqueue(message.Statistics);
@@ -52,6 +85,17 @@ namespace SpeedSlidingTrainer.Application.Services.SessionStatistics
             }
 
             this.LastSolves = this.lastSolvesQueue.Reverse().ToList();
+
+            this.last5Statistics.Append(message.Statistics);
+            this.last12Statistics.Append(message.Statistics);
+            this.last50Statistics.Append(message.Statistics);
+            this.last100Statistics.Append(message.Statistics);
+            this.fullStatistics.Append(message.Statistics);
+        }
+
+        private void OnDrillChanged(DrillChanged message)
+        {
+            this.Clear();
         }
     }
 }

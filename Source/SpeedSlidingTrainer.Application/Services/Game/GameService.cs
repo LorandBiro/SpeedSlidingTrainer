@@ -127,6 +127,8 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             }
 
             this.Drill = drill;
+            this.messageBus.Publish(new DrillChanged());
+
             this.Scramble();
         }
 

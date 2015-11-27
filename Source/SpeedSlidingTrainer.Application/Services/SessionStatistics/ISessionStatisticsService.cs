@@ -9,5 +9,22 @@ namespace SpeedSlidingTrainer.Application.Services.SessionStatistics
     {
         [NotNull]
         IReadOnlyList<SolveStatistics> LastSolves { get; }
+
+        [NotNull]
+        IAggregatedSolveStatistics Last5Statistics { get; }
+
+        [NotNull]
+        IAggregatedSolveStatistics Last12Statistics { get; }
+
+        [NotNull]
+        IAggregatedSolveStatistics Last50Statistics { get; }
+
+        [NotNull]
+        IAggregatedSolveStatistics Last100Statistics { get; }
+
+        [NotNull]
+        IAggregatedSolveStatistics FullStatistics { get; }
+
+        void Clear();
     }
 }
