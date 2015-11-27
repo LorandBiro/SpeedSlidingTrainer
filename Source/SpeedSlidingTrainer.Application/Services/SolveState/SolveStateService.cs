@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using JetBrains.Annotations;
 using SpeedSlidingTrainer.Application.Events;
 using SpeedSlidingTrainer.Application.Infrastructure;
@@ -29,9 +27,6 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
 
         private TimeSpan duration;
 
-        [NotNull]
-        private IReadOnlyList<SolveStatistics> lastSolves = new SolveStatistics[0];
-
         public SolveStateService([NotNull] IMessageQueue messageQueue, [NotNull] ITimerFactory timerFactory)
         {
             if (messageQueue == null)
@@ -44,8 +39,6 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
 
             this.messageQueue.Subscribe<BoardScrambled>(this.OnBoardScrambled);
             this.messageQueue.Subscribe<BoardResetted>(this.OnBoardResetted);
-            this.messageQueue.Subscribe<SolveStarted>(this.OnSolveStarted);
-            this.messageQueue.Subscribe<SolveCompleted>(this.OnSolveCompleted);
             this.messageQueue.Subscribe<SlideHappened>(this.OnSlideHappened);
             this.messageQueue.Subscribe<SolutionsFound>(this.OnSolutionFound);
         }
@@ -123,43 +116,6 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
             }
         }
 
-        public IReadOnlyList<SolveStatistics> LastSolves
-        {
-            get
-            {
-                return this.lastSolves;
-            }
-
-            private set
-            {
-                this.lastSolves = value;
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.LastSolves)));
-            }
-        }
-
-        private void OnSolveStarted(SolveStarted message)
-        {
-            this.startedAt = DateTime.UtcNow;
-            this.timer.Start();
-        }
-
-        private void OnSolveCompleted(SolveCompleted message)
-        {
-            this.completedAt = DateTime.UtcNow;
-            this.timer.Stop();
-            this.Duration = this.completedAt - this.startedAt;
-
-            SolveStatistics statistics = new SolveStatistics(this.Duration, this.StepCount, this.OptimalStepCount);
-            List<SolveStatistics> temp = this.LastSolves.ToList();
-            temp.Insert(0, statistics);
-            while (temp.Count > 5)
-            {
-                temp.RemoveAt(temp.Count - 1);
-            }
-
-            this.LastSolves = temp;
-        }
-
         private void OnBoardResetted(BoardResetted message)
         {
             this.Status = SolveStatus.NotStarted;
@@ -175,22 +131,13 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
             this.Duration = TimeSpan.Zero;
         }
 
-        private void OnTick()
-        {
-            if (this.Status != SolveStatus.InProgress)
-            {
-                return;
-            }
-
-            this.Duration = DateTime.UtcNow - this.startedAt;
-        }
-
         private void OnSlideHappened(SlideHappened message)
         {
             if (this.Status == SolveStatus.NotStarted)
             {
                 this.Status = SolveStatus.InProgress;
-                this.messageQueue.Publish(new SolveStarted());
+                this.startedAt = DateTime.UtcNow;
+                this.timer.Start();
             }
 
             if (this.Status == SolveStatus.InProgress)
@@ -199,7 +146,12 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
                 if (message.BoardSolved)
                 {
                     this.Status = SolveStatus.Completed;
-                    this.messageQueue.Publish(new SolveCompleted());
+                    this.completedAt = DateTime.UtcNow;
+                    this.timer.Stop();
+                    this.Duration = this.completedAt - this.startedAt;
+
+                    SolveStatistics solveStatistics = new SolveStatistics(this.Duration, this.StepCount, this.OptimalStepCount);
+                    this.messageQueue.Publish(new SolveCompleted(solveStatistics));
                 }
             }
         }
@@ -210,6 +162,16 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
             {
                 this.OptimalStepCount = message.Solutions[0].Length;
             }
+        }
+
+        private void OnTick()
+        {
+            if (this.Status != SolveStatus.InProgress)
+            {
+                return;
+            }
+
+            this.Duration = DateTime.UtcNow - this.startedAt;
         }
     }
 }

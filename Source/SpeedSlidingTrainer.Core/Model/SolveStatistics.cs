@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SpeedSlidingTrainer.Application.Services.SolveState
+namespace SpeedSlidingTrainer.Core.Model
 {
     public sealed class SolveStatistics
     {

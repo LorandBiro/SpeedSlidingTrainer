@@ -2,6 +2,7 @@
 using SpeedSlidingTrainer.Application.Repositories;
 using SpeedSlidingTrainer.Application.Services.Drills;
 using SpeedSlidingTrainer.Application.Services.Game;
+using SpeedSlidingTrainer.Application.Services.SessionStatistics;
 using SpeedSlidingTrainer.Application.Services.Solver;
 using SpeedSlidingTrainer.Application.Services.SolveState;
 using SpeedSlidingTrainer.Core.Model;
@@ -36,6 +37,8 @@ namespace SpeedSlidingTrainer.Desktop
         public static ISolverService SolverService { get; } = new SolverService(MessageQueue, GameService, BoardSolverService, Dispatcher);
 
         public static ISolveStateService SolveStateService { get; } = new SolveStateService(MessageQueue, TimerFactory);
+
+        public static ISessionStatisticsService SessionStatisticsService { get; } = new SessionStatisticsService(MessageQueue);
 
         public static IDrillService DrillService { get; } = new DrillService(DrillRepository);
 

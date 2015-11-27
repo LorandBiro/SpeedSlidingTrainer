@@ -61,17 +61,17 @@
     <Compile Include="Events\BoardResetted.cs" />
     <Compile Include="Events\SlideHappened.cs" />
     <Compile Include="Events\SolveCompleted.cs" />
-    <Compile Include="Events\SolveStarted.cs" />
     <Compile Include="Services\Game\GameService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Game\IGameService.cs" />
+    <Compile Include="Services\SessionStatistics\ISessionStatisticsService.cs" />
+    <Compile Include="Services\SessionStatistics\SessionStatisticsService.cs" />
     <Compile Include="Services\Solver\ISolverService.cs" />
     <Compile Include="Services\Solver\SolutionStep.cs" />
     <Compile Include="Services\Solver\SolutionStepStatus.cs" />
     <Compile Include="Services\Solver\SolverService.cs" />
     <Compile Include="Services\Solver\SolverServiceStatus.cs" />
     <Compile Include="Services\SolveState\ISolveStateService.cs" />
-    <Compile Include="Services\SolveState\SolveStatistics.cs" />
     <Compile Include="Services\SolveState\SolveStateService.cs" />
   </ItemGroup>
   <ItemGroup>

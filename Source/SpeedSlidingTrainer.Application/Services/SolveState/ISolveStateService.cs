@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using SpeedSlidingTrainer.Core.Model;
 
@@ -14,7 +13,5 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
         int? OptimalStepCount { get; }
 
         TimeSpan Duration { get; }
-
-        IReadOnlyList<SolveStatistics> LastSolves { get; }
     }
 }

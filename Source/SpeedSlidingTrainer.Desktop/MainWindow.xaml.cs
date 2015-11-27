@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using SpeedSlidingTrainer.Application.Services.Game;
+using SpeedSlidingTrainer.Application.Services.SessionStatistics;
 using SpeedSlidingTrainer.Application.Services.Solver;
 using SpeedSlidingTrainer.Application.Services.SolveState;
 
@@ -20,6 +20,8 @@ namespace SpeedSlidingTrainer.Desktop
         public ISolveStateService SolveStateService { get; } = ServiceLocator.SolveStateService;
 
         public ISolverService SolverService { get; } = ServiceLocator.SolverService;
+
+        public ISessionStatisticsService SessionStatisticsService { get; } = ServiceLocator.SessionStatisticsService;
 
         protected override void OnKeyDown(KeyEventArgs e)
         {

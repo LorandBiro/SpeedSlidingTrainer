@@ -130,7 +130,7 @@
             <TextBlock Text="Session"
                        HorizontalAlignment="Center"
                        FontSize="24" />
-            <ItemsControl ItemsSource="{Binding SolveStateService.LastSolves}"
+            <ItemsControl ItemsSource="{Binding SessionStatisticsService.LastSolves}"
                           Focusable="False">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
