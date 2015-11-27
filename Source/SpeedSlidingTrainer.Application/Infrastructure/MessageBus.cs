@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace SpeedSlidingTrainer.Application.Infrastructure
 {
-    public sealed class MessageQueue : IMessageQueue
+    public sealed class MessageBus : IMessageBus
     {
         private readonly ConcurrentDictionary<Type, Action<object>[]> handlersByType = new ConcurrentDictionary<Type, Action<object>[]>();
 

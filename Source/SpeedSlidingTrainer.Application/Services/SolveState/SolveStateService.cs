@@ -10,7 +10,7 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
     public sealed class SolveStateService : ISolveStateService
     {
         [NotNull]
-        private readonly IMessageQueue messageQueue;
+        private readonly IMessageBus messageBus;
 
         [NotNull]
         private readonly ITimer timer;
@@ -27,20 +27,20 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
 
         private TimeSpan duration;
 
-        public SolveStateService([NotNull] IMessageQueue messageQueue, [NotNull] ITimerFactory timerFactory)
+        public SolveStateService([NotNull] IMessageBus messageBus, [NotNull] ITimerFactory timerFactory)
         {
-            if (messageQueue == null)
+            if (messageBus == null)
             {
-                throw new ArgumentNullException(nameof(messageQueue));
+                throw new ArgumentNullException(nameof(messageBus));
             }
 
-            this.messageQueue = messageQueue;
+            this.messageBus = messageBus;
             this.timer = timerFactory.Create(TimeSpan.FromMilliseconds(25), this.OnTick);
 
-            this.messageQueue.Subscribe<BoardScrambled>(this.OnBoardScrambled);
-            this.messageQueue.Subscribe<BoardResetted>(this.OnBoardResetted);
-            this.messageQueue.Subscribe<SlideHappened>(this.OnSlideHappened);
-            this.messageQueue.Subscribe<SolutionsFound>(this.OnSolutionFound);
+            this.messageBus.Subscribe<BoardScrambled>(this.OnBoardScrambled);
+            this.messageBus.Subscribe<BoardResetted>(this.OnBoardResetted);
+            this.messageBus.Subscribe<SlideHappened>(this.OnSlideHappened);
+            this.messageBus.Subscribe<SolutionsFound>(this.OnSolutionFound);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -151,7 +151,7 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
                     this.Duration = this.completedAt - this.startedAt;
 
                     SolveStatistics solveStatistics = new SolveStatistics(this.Duration, this.StepCount, this.OptimalStepCount);
-                    this.messageQueue.Publish(new SolveCompleted(solveStatistics));
+                    this.messageBus.Publish(new SolveCompleted(solveStatistics));
                 }
             }
         }

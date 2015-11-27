@@ -2,7 +2,7 @@
 
 namespace SpeedSlidingTrainer.Application.Infrastructure
 {
-    public interface IMessageQueue
+    public interface IMessageBus
     {
         void Subscribe<TMessage>(Action<TMessage> handler);
 

@@ -27,18 +27,18 @@ namespace SpeedSlidingTrainer.Desktop
 
         public static IDispatcher Dispatcher { get; } = new WpfDispatcher();
 
-        public static IMessageQueue MessageQueue { get; } = new MessageQueue();
+        public static IMessageBus MessageBus { get; } = new MessageBus();
 
         public static IRepository<Drill> DrillRepository { get; } = new DrillRepository(DataStorage);
 
         // Application services
-        public static IGameService GameService { get; } = new GameService(MessageQueue, BoardGeneratorService);
+        public static IGameService GameService { get; } = new GameService(MessageBus, BoardGeneratorService);
 
-        public static ISolverService SolverService { get; } = new SolverService(MessageQueue, GameService, BoardSolverService, Dispatcher);
+        public static ISolverService SolverService { get; } = new SolverService(MessageBus, GameService, BoardSolverService, Dispatcher);
 
-        public static ISolveStateService SolveStateService { get; } = new SolveStateService(MessageQueue, TimerFactory);
+        public static ISolveStateService SolveStateService { get; } = new SolveStateService(MessageBus, TimerFactory);
 
-        public static ISessionStatisticsService SessionStatisticsService { get; } = new SessionStatisticsService(MessageQueue);
+        public static ISessionStatisticsService SessionStatisticsService { get; } = new SessionStatisticsService(MessageBus);
 
         public static IDrillService DrillService { get; } = new DrillService(DrillRepository);
 

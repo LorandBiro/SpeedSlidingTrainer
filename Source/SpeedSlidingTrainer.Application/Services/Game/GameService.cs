@@ -12,7 +12,7 @@ namespace SpeedSlidingTrainer.Application.Services.Game
     public class GameService : IGameService
     {
         [NotNull]
-        private readonly IMessageQueue messageQueue;
+        private readonly IMessageBus messageBus;
 
         [NotNull]
         private readonly IBoardGeneratorService boardGeneratorService;
@@ -23,11 +23,11 @@ namespace SpeedSlidingTrainer.Application.Services.Game
         [NotNull]
         private BoardState boardState;
 
-        public GameService([NotNull] IMessageQueue messageQueue, [NotNull] IBoardGeneratorService boardGeneratorService)
+        public GameService([NotNull] IMessageBus messageBus, [NotNull] IBoardGeneratorService boardGeneratorService)
         {
-            if (messageQueue == null)
+            if (messageBus == null)
             {
-                throw new ArgumentNullException(nameof(messageQueue));
+                throw new ArgumentNullException(nameof(messageBus));
             }
 
             if (boardGeneratorService == null)
@@ -35,7 +35,7 @@ namespace SpeedSlidingTrainer.Application.Services.Game
                 throw new ArgumentNullException(nameof(boardGeneratorService));
             }
 
-            this.messageQueue = messageQueue;
+            this.messageBus = messageBus;
             this.boardGeneratorService = boardGeneratorService;
 
             this.drill = Drill.CreateNew("Default", BoardTemplate.CreateEmpty(4, 4), BoardGoal.CreateCompleted(4, 4));
@@ -83,7 +83,7 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             }
 
             this.BoardState = this.BoardState.SlideLeft();
-            this.messageQueue.Publish(new SlideHappened(Step.Left, this.BoardState.Satisfies(this.Drill.Goal)));
+            this.messageBus.Publish(new SlideHappened(Step.Left, this.BoardState.Satisfies(this.Drill.Goal)));
         }
 
         public void SlideUp()
@@ -94,7 +94,7 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             }
 
             this.BoardState = this.BoardState.SlideUp();
-            this.messageQueue.Publish(new SlideHappened(Step.Up, this.BoardState.Satisfies(this.Drill.Goal)));
+            this.messageBus.Publish(new SlideHappened(Step.Up, this.BoardState.Satisfies(this.Drill.Goal)));
         }
 
         public void SlideRight()
@@ -105,7 +105,7 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             }
 
             this.BoardState = this.BoardState.SlideRight();
-            this.messageQueue.Publish(new SlideHappened(Step.Right, this.BoardState.Satisfies(this.Drill.Goal)));
+            this.messageBus.Publish(new SlideHappened(Step.Right, this.BoardState.Satisfies(this.Drill.Goal)));
         }
 
         public void SlideDown()
@@ -116,7 +116,7 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             }
 
             this.BoardState = this.BoardState.SlideDown();
-            this.messageQueue.Publish(new SlideHappened(Step.Down, this.BoardState.Satisfies(this.Drill.Goal)));
+            this.messageBus.Publish(new SlideHappened(Step.Down, this.BoardState.Satisfies(this.Drill.Goal)));
         }
 
         public void SetDrill(Drill drill)
@@ -135,14 +135,14 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             this.InitialState = this.boardGeneratorService.Generate(this.drill.Template, this.drill.Goal);
             this.BoardState = this.InitialState;
 
-            this.messageQueue.Publish(new BoardScrambled());
+            this.messageBus.Publish(new BoardScrambled());
         }
 
         public void Reset()
         {
             this.BoardState = this.InitialState;
 
-            this.messageQueue.Publish(new BoardResetted());
+            this.messageBus.Publish(new BoardResetted());
         }
     }
 }

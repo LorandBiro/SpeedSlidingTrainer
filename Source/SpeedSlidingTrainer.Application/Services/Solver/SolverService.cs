@@ -17,7 +17,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
     public sealed class SolverService : ISolverService
     {
         [NotNull]
-        private readonly IMessageQueue messageQueue;
+        private readonly IMessageBus messageBus;
 
         [NotNull]
         private readonly IGameService gameService;
@@ -43,14 +43,14 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
         private BoardState solvedBoardState;
 
         public SolverService(
-            [NotNull] IMessageQueue messageQueue,
+            [NotNull] IMessageBus messageBus,
             [NotNull] IGameService gameService,
             [NotNull] IBoardSolverService boardSolverService,
             [NotNull] IDispatcher dispatcher)
         {
-            if (messageQueue == null)
+            if (messageBus == null)
             {
-                throw new ArgumentNullException(nameof(messageQueue));
+                throw new ArgumentNullException(nameof(messageBus));
             }
 
             if (gameService == null)
@@ -68,14 +68,14 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
                 throw new ArgumentNullException(nameof(dispatcher));
             }
 
-            this.messageQueue = messageQueue;
+            this.messageBus = messageBus;
             this.gameService = gameService;
             this.boardSolverService = boardSolverService;
             this.dispatcher = dispatcher;
 
-            this.messageQueue.Subscribe<BoardScrambled>(this.OnBoardScrambled);
-            this.messageQueue.Subscribe<BoardResetted>(this.OnBoardResetted);
-            this.messageQueue.Subscribe<SlideHappened>(this.OnSlideHappened);
+            this.messageBus.Subscribe<BoardScrambled>(this.OnBoardScrambled);
+            this.messageBus.Subscribe<BoardResetted>(this.OnBoardResetted);
+            this.messageBus.Subscribe<SlideHappened>(this.OnSlideHappened);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -261,7 +261,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             this.nextStepIndex = 0;
             this.solvedBoardState = job.StateToSolve;
 
-            this.messageQueue.Publish(new SolutionsFound(job.InitialState, job.StateToSolve, solutions));
+            this.messageBus.Publish(new SolutionsFound(job.InitialState, job.StateToSolve, solutions));
         }
 
         private class BackgroundJob

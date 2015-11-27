@@ -46,10 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events\SolutionsFound.cs" />
-    <Compile Include="Infrastructure\MessageQueue.cs" />
+    <Compile Include="Infrastructure\MessageBus.cs" />
     <Compile Include="Infrastructure\IDataStorage.cs" />
     <Compile Include="Infrastructure\IDispatcher.cs" />
-    <Compile Include="Infrastructure\IMessageQueue.cs" />
+    <Compile Include="Infrastructure\IMessageBus.cs" />
     <Compile Include="Infrastructure\ITimer.cs" />
     <Compile Include="Infrastructure\ITimerFactory.cs" />
     <Compile Include="Repositories\DrillRepository.cs" />

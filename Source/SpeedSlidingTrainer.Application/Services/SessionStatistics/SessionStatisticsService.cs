@@ -17,14 +17,14 @@ namespace SpeedSlidingTrainer.Application.Services.SessionStatistics
         [NotNull]
         private IReadOnlyList<SolveStatistics> lastSolves = new SolveStatistics[0];
 
-        public SessionStatisticsService([NotNull] IMessageQueue messageQueue)
+        public SessionStatisticsService([NotNull] IMessageBus messageBus)
         {
-            if (messageQueue == null)
+            if (messageBus == null)
             {
-                throw new ArgumentNullException(nameof(messageQueue));
+                throw new ArgumentNullException(nameof(messageBus));
             }
 
-            messageQueue.Subscribe<SolveCompleted>(this.OnSolveCompleted);
+            messageBus.Subscribe<SolveCompleted>(this.OnSolveCompleted);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
