@@ -141,7 +141,7 @@ namespace SpeedSlidingTrainer.Application.Services.Solver
             this.Solutions = null;
             this.currentBackgroundJob = new BackgroundJob
             {
-                InitialState = this.gameService.StartState,
+                InitialState = this.gameService.InitialState,
                 StateToSolve = this.gameService.BoardState,
                 Goal = this.gameService.Drill.Goal,
                 CancellationTokenSource = new CancellationTokenSource()
