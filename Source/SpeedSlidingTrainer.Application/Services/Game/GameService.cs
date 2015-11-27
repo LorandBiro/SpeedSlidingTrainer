@@ -41,12 +41,8 @@ namespace SpeedSlidingTrainer.Application.Services.Game
             this.messageQueue = messageQueue;
             this.boardGeneratorService = boardGeneratorService;
 
-            this.StartState = BoardState.CreateCompleted(4, 4);
-            this.drill = Drill.CreateNew(
-                "Default",
-                new BoardTemplate(4, 4, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 13, 0, 0, 0 }),
-                new BoardGoal(4, 4, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 13, 14, 0, 0 }));
-
+            this.drill = Drill.CreateNew("Default", BoardTemplate.CreateEmpty(4, 4), BoardGoal.CreateCompleted(4, 4));
+            this.StartState = this.boardGeneratorService.Generate(this.drill.Template, this.drill.Goal);
             this.board = new Board(this.StartState, this.drill.Goal);
             this.boardState = this.board.State;
         }

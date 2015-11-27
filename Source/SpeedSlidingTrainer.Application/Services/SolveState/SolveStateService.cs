@@ -17,7 +17,7 @@ namespace SpeedSlidingTrainer.Application.Services.SolveState
         [NotNull]
         private readonly ITimer timer;
 
-        private SolveStatus status = SolveStatus.Completed;
+        private SolveStatus status;
 
         private int stepCount;
 
