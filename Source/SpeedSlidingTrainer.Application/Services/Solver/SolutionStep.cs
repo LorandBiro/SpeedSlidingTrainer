@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using SpeedSlidingTrainer.Core.Model;
 
 namespace SpeedSlidingTrainer.Application.Services.Solver

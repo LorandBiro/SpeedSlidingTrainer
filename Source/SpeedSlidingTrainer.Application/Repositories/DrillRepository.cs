@@ -21,14 +21,14 @@ namespace SpeedSlidingTrainer.Application.Repositories
         protected override DrillDto ToDto(Drill entity)
         {
             return new DrillDto
-                {
-                    Id = entity.Id,
-                    Name = entity.Name,
-                    Width = entity.Template.Width,
-                    Height = entity.Template.Height,
-                    TemplateValues = entity.Template.GetValues(),
-                    GoalValues = entity.Goal.GetValues()
-                };
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Width = entity.Template.Width,
+                Height = entity.Template.Height,
+                TemplateValues = entity.Template.GetValues(),
+                GoalValues = entity.Goal.GetValues()
+            };
         }
 
         public class DrillDto

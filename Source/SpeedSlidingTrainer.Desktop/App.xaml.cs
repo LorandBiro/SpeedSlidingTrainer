@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SpeedSlidingTrainer.Desktop
+﻿namespace SpeedSlidingTrainer.Desktop
 {
     public partial class App
     {

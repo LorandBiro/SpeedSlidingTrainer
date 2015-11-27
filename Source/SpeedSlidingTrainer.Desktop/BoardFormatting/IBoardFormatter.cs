@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using SpeedSlidingTrainer.Core.Model.State;
 
 namespace SpeedSlidingTrainer.Desktop.BoardFormatting

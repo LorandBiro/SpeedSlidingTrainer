@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Threading;
 using SpeedSlidingTrainer.Application.Infrastructure;
 
 namespace SpeedSlidingTrainer.Desktop.Infrastructure

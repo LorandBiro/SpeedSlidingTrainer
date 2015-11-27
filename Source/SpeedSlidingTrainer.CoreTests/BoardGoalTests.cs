@@ -1,6 +1,5 @@
 ﻿namespace SpeedSlidingTrainer.CoreTests
 {
-    using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using SpeedSlidingTrainer.Core.Model.State;
     using SpeedSlidingTrainer.Core.Model.State.Validation;

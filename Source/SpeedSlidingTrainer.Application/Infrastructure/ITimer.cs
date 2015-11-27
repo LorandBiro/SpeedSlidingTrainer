@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SpeedSlidingTrainer.Application.Infrastructure
+﻿namespace SpeedSlidingTrainer.Application.Infrastructure
 {
     public interface ITimer
     {
