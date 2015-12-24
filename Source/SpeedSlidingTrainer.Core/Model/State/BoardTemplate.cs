@@ -16,11 +16,6 @@ namespace SpeedSlidingTrainer.Core.Model.State
             return new BoardTemplate(width, height, new int[width * height]);
         }
 
-        public static bool Validate(int width, int height, [NotNull] int[] values, [NotNull] out BoardValidationError[] errors)
-        {
-            return BoardStateBase.Validate(width, height, values, ValidationType.BoardTemplate, out errors);
-        }
-
         public bool Satisfies([NotNull] BoardGoal goal)
         {
             if (goal == null)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using SpeedSlidingTrainer.Core.Model.State;
+using SpeedSlidingTrainer.Core.Model.State.Validation;
 
 namespace SpeedSlidingTrainer.Core.Services.BoardGenerator
 {
@@ -35,7 +36,7 @@ namespace SpeedSlidingTrainer.Core.Services.BoardGenerator
                 set.RemoveAt(i);
             }
 
-            if (!BoardStateBase.IsSolvable(template.Width, template.Height, values))
+            if (!BoardValidator.IsSolvable(template.Width, template.Height, values))
             {
                 int i = unspecifiedIndices[0];
                 int j = unspecifiedIndices[1];
@@ -68,10 +69,9 @@ namespace SpeedSlidingTrainer.Core.Services.BoardGenerator
                 throw new ArgumentNullException(nameof(goal));
             }
 
-            BoardState state;
             for (int i = 0; i < RetryCount; i++)
             {
-                state = this.Generate(template);
+                BoardState state = this.Generate(template);
                 if (!state.Satisfies(goal))
                 {
                     return state;

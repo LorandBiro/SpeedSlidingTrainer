@@ -27,49 +27,25 @@ namespace SpeedSlidingTrainer.Core.Model.State
             this.eye = eye;
         }
 
-        public bool CanSlideLeft
-        {
-            get
-            {
-                return (this.eye % this.Width) < this.Width - 1;
-            }
-        }
+        public bool CanSlideLeft => (this.eye % this.Width) < this.Width - 1;
 
-        public bool CanSlideUp
-        {
-            get
-            {
-                return (this.eye / this.Width) < this.Height - 1;
-            }
-        }
+        public bool CanSlideUp => (this.eye / this.Width) < this.Height - 1;
 
-        public bool CanSlideRight
-        {
-            get
-            {
-                return (this.eye % this.Width) > 0;
-            }
-        }
+        public bool CanSlideRight => (this.eye % this.Width) > 0;
 
-        public bool CanSlideDown
-        {
-            get
-            {
-                return (this.eye / this.Width) > 0;
-            }
-        }
+        public bool CanSlideDown => (this.eye / this.Width) > 0;
 
         [NotNull]
         public static BoardState CreateCompleted(int width, int height)
         {
             if (width < 2)
             {
-                throw new ArgumentException("Width must be at least 2.", "width");
+                throw new ArgumentException("Width must be at least 2.", nameof(width));
             }
 
             if (height < 2)
             {
-                throw new ArgumentException("Height must be at least 2.", "height");
+                throw new ArgumentException("Height must be at least 2.", nameof(height));
             }
 
             int[] values = new int[width * height];
@@ -81,11 +57,6 @@ namespace SpeedSlidingTrainer.Core.Model.State
             values[values.Length - 1] = 0;
 
             return new BoardState(width, height, values, values.Length - 1);
-        }
-
-        public static bool Validate(int width, int height, [NotNull] int[] values, [NotNull] out BoardValidationError[] errors)
-        {
-            return BoardStateBase.Validate(width, height, values, ValidationType.BoardState, out errors);
         }
 
         public bool Satisfies([NotNull] BoardGoal goal)

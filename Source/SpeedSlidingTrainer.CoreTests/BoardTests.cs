@@ -1,10 +1,9 @@
-﻿namespace SpeedSlidingTrainer.CoreTests
-{
-    using System;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using SpeedSlidingTrainer.Core.Model.State;
-    using SpeedSlidingTrainer.Core.Model.State.Validation;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SpeedSlidingTrainer.Core.Model.State.Validation;
 
+namespace SpeedSlidingTrainer.CoreTests
+{
     [TestClass]
     public class BoardTests
     {
@@ -18,7 +17,7 @@
 
             // Act
             // ReSharper disable once AssignNullToNotNullAttribute
-            BoardState.Validate(4, 4, values, out errors);
+            BoardValidator.Validate(4, 4, values, ValidationType.BoardState, out errors);
         }
 
         [TestMethod]
@@ -30,7 +29,7 @@
             int[] values = { 0, 0, 0, 1, 2 };
 
             // Act
-            BoardState.Validate(1, 5, values, out errors);
+            BoardValidator.Validate(1, 5, values, ValidationType.BoardState, out errors);
         }
 
         [TestMethod]
@@ -41,7 +40,7 @@
             int[] values = { 1, 2, 3, 4, 5, 6, 9, 8, 0 };
 
             // Act
-            bool isValid = BoardState.Validate(3, 3, values, out errors);
+            bool isValid = BoardValidator.Validate(3, 3, values, ValidationType.BoardState, out errors);
 
             // Assert
             Assert.IsFalse(isValid);
@@ -60,7 +59,7 @@
             int[] values = { 1, 2, 3, 4, -5, 6, 7, 8, 0 };
 
             // Act
-            bool isValid = BoardState.Validate(3, 3, values, out errors);
+            bool isValid = BoardValidator.Validate(3, 3, values, ValidationType.BoardState, out errors);
 
             // Assert
             Assert.IsFalse(isValid);
@@ -79,7 +78,7 @@
             int[] values = { 1, 2, 3, 1, 5, 6, 7, 8, 0 };
 
             // Act
-            bool isValid = BoardState.Validate(3, 3, values, out errors);
+            bool isValid = BoardValidator.Validate(3, 3, values, ValidationType.BoardState, out errors);
 
             // Assert
             Assert.IsFalse(isValid);
@@ -98,7 +97,7 @@
             int[] values = { 0, 7, 2, 1, 4, 6, 3, 5 };
 
             // Act
-            bool isValid = BoardState.Validate(4, 2, values, out errors);
+            bool isValid = BoardValidator.Validate(4, 2, values, ValidationType.BoardState, out errors);
 
             // Assert
             Assert.IsFalse(isValid);

@@ -42,6 +42,8 @@
     <Compile Include="Model\InvalidDrillException.cs" />
     <Compile Include="Model\SolveStatistics.cs" />
     <Compile Include="Model\SolveStatus.cs" />
+    <Compile Include="Model\State\Validation\BoardValidator.cs" />
+    <Compile Include="Model\State\Validation\ValidationType.cs" />
     <Compile Include="Services\BoardGenerator\BoardGenerationException.cs" />
     <Compile Include="Services\BoardGenerator\BoardGeneratorService.cs" />
     <Compile Include="Services\BoardSolver\BoardSolverService.cs" />

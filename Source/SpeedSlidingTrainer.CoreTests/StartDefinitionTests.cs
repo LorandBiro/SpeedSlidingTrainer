@@ -1,10 +1,9 @@
-﻿namespace SpeedSlidingTrainer.CoreTests
-{
-    using System;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using SpeedSlidingTrainer.Core.Model.State;
-    using SpeedSlidingTrainer.Core.Model.State.Validation;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SpeedSlidingTrainer.Core.Model.State.Validation;
 
+namespace SpeedSlidingTrainer.CoreTests
+{
     [TestClass]
     public class StartDefinitionTests
     {
@@ -17,7 +16,7 @@
 
             // Act
             // ReSharper disable once AssignNullToNotNullAttribute
-            BoardTemplate.Validate(3, 3, null, out errors);
+            BoardValidator.Validate(3, 3, null, ValidationType.BoardTemplate, out errors);
         }
 
         [TestMethod]
@@ -28,7 +27,7 @@
             BoardValidationError[] errors;
 
             // Act
-            BoardTemplate.Validate(5, 1, new[] { 0, 0, 0, 1, 2 }, out errors);
+            BoardValidator.Validate(5, 1, new[] { 0, 0, 0, 1, 2 }, ValidationType.BoardTemplate, out errors);
         }
 
         [TestMethod]
@@ -38,7 +37,7 @@
             BoardValidationError[] errors;
 
             // Act
-            bool isValid = BoardTemplate.Validate(3, 3, new[] { 1, 2, 99, 0, 0, 0, 0, 0, 0 }, out errors);
+            bool isValid = BoardValidator.Validate(3, 3, new[] { 1, 2, 99, 0, 0, 0, 0, 0, 0 }, ValidationType.BoardTemplate, out errors);
 
             // Assert
             Assert.IsFalse(isValid);
@@ -56,7 +55,7 @@
             BoardValidationError[] errors;
 
             // Act
-            bool isValid = BoardTemplate.Validate(3, 3, new[] { 1, 2, 3, 0, -1, 0, 0, 0, 0 }, out errors);
+            bool isValid = BoardValidator.Validate(3, 3, new[] { 1, 2, 3, 0, -1, 0, 0, 0, 0 }, ValidationType.BoardTemplate, out errors);
 
             // Assert
             Assert.IsFalse(isValid);
@@ -74,7 +73,7 @@
             BoardValidationError[] errors;
 
             // Act
-            bool isValid = BoardTemplate.Validate(3, 3, new[] { 1, 4, 7, 2, 5, 8, 3, 0, 0 }, out errors);
+            bool isValid = BoardValidator.Validate(3, 3, new[] { 1, 4, 7, 2, 5, 8, 3, 0, 0 }, ValidationType.BoardTemplate, out errors);
 
             // Assert
             Assert.IsFalse(isValid);
@@ -90,7 +89,7 @@
             BoardValidationError[] errors;
 
             // Act
-            bool isValid = BoardTemplate.Validate(3, 3, new[] { 1, 4, 7, 2, 5, 1, 0, 0, 0 }, out errors);
+            bool isValid = BoardValidator.Validate(3, 3, new[] { 1, 4, 7, 2, 5, 1, 0, 0, 0 }, ValidationType.BoardTemplate, out errors);
 
             // Assert
             Assert.IsFalse(isValid);
