@@ -55,9 +55,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BoardSolverTests.cs" />
-    <Compile Include="BoardGoalTests.cs" />
     <Compile Include="BoardTests.cs" />
-    <Compile Include="StartDefinitionTests.cs" />
+    <Compile Include="Utils\ExceptionAssert.cs" />
+    <Compile Include="Model\State\Validation\BoardValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
