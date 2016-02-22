@@ -57,6 +57,15 @@
     <Compile Include="BoardSolverTests.cs" />
     <Compile Include="BoardTests.cs" />
     <Compile Include="Utils\ExceptionAssert.cs" />
+    <Compile Include="Model\State\Validation\BoardValidatorTests.BoardState.cs">
+      <DependentUpon>BoardValidatorTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\State\Validation\BoardValidatorTests.BoardTemplate.cs">
+      <DependentUpon>BoardValidatorTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\State\Validation\BoardValidatorTests.BoardGoal.cs">
+      <DependentUpon>BoardValidatorTests.cs</DependentUpon>
+    </Compile>
     <Compile Include="Model\State\Validation\BoardValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
