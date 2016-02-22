@@ -110,12 +110,16 @@ namespace SpeedSlidingTrainer.Core.Model.State.Validation
                     {
                         problems.Add(new BoardValidationError(BoardValidationErrorType.NotSolvable, "There are no specified tiles."));
                     }
-                    else if (unspecifiedCount < 3)
+                    else if (unspecifiedCount == 1)
                     {
                         if (problems.Count == 0 && !IsSolvable(width, height, values))
                         {
                             problems.Add(new BoardValidationError(BoardValidationErrorType.NotSolvable, "The board is not solvable."));
                         }
+                    }
+                    else if (unspecifiedCount == 2)
+                    {
+                        problems.Add(new BoardValidationError(BoardValidationErrorType.NotSolvable, "Board goals with 2 unspecified tile is not supported."));
                     }
 
                     break;
